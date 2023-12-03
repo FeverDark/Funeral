@@ -6,14 +6,16 @@ import javax.swing.table.TableRowSorter;
 import java.awt.*;
 
 public class Controller {
+    public TableRowSorter<MyTableModel> getSorter() {
+        return sorter;
+    }
+
     private TableRowSorter<MyTableModel> sorter;
     private int state = 0;
     private boolean update = false;
     private JTable tempTable;
 
-    public Controller() {
-
-    }
+    public Controller() {}
 
     public int getState() {
         return state;

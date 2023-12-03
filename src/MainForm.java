@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,6 +31,7 @@ public class MainForm extends JFrame {
     private JTextField filter;
     private JButton button20;
     private JPanel tablePanel;
+
     public MainForm(String title, DB data, Controller control) {
         super(title);
 
@@ -131,18 +134,18 @@ public class MainForm extends JFrame {
                 control.setState(16);
             }
         });
-        button17.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-        button18.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("обновить");
-            }
-        });
+        filter.getDocument().addDocumentListener(
+                new DocumentListener() {
+                    public void changedUpdate(DocumentEvent e) {
+                        newFilter(control);
+                    }
+                    public void insertUpdate(DocumentEvent e) {
+                        newFilter(control);
+                    }
+                    public void removeUpdate(DocumentEvent e) {
+                        newFilter(control);
+                    }
+                });
         button19.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -204,7 +207,108 @@ public class MainForm extends JFrame {
         button18.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                if (control.getTempTable().getSelectedRow() != -1){
+                    int tempState = control.getState();
+                    JFrame temp;
+                    switch (tempState) {
+                        case 1:
+                            temp = new ClientEdit("Изменить клиента", data, control, control.getTempTable().convertRowIndexToModel(control.getTempTable().getSelectedRow()));
+                            temp.setIconImage(getFDImage());
+                            temp.setSize(600, 400);
+                            temp.setVisible(true);
+                            break;
+                        case 2:
+                            temp = new ContractorEdit("Изменить подрядчика", data, control);
+                            temp.setIconImage(getFDImage());
+                            temp.setSize(600, 400);
+                            temp.setVisible(true);
+                            break;
+                        case 3:
+                            temp = new CorpseEdit("Изменить тело", data, control);
+                            temp.setIconImage(getFDImage());
+                            temp.setSize(600, 400);
+                            temp.setVisible(true);
+                            break;
+                        case 4:
+                            temp = new DocumentEdit("Изменить документ", data, control);
+                            temp.setIconImage(getFDImage());
+                            temp.setSize(600, 400);
+                            temp.setVisible(true);
+                            break;
+                        case 5:
+                            temp = new EmployerEdit("Изменить сотрудника", data, control);
+                            temp.setIconImage(getFDImage());
+                            temp.setSize(600, 400);
+                            temp.setVisible(true);
+                            break;
+                        case 6:
+                            temp = new GraveyardEdit("Изменить место на кладбище", data, control);
+                            temp.setIconImage(getFDImage());
+                            temp.setSize(600, 400);
+                            temp.setVisible(true);
+                            break;
+                        case 7:
+                            temp = new OrderingEdit("Изменить заказ", data, control);
+                            temp.setIconImage(getFDImage());
+                            temp.setSize(600, 400);
+                            temp.setVisible(true);
+                            break;
+                        case 8:
+                            temp = new OrderPlaceEdit("Изменить место заказа", data, control);
+                            temp.setIconImage(getFDImage());
+                            temp.setSize(750, 400);
+                            temp.setVisible(true);
+                            break;
+                        case 9:
+                            temp = new OrderProductsEdit("Изменить товар заказа", data, control);
+                            temp.setIconImage(getFDImage());
+                            temp.setSize(600, 400);
+                            temp.setVisible(true);
+                            break;
+                        case 10:
+                            temp = new OrderServicesEdit("Изменить услугу заказа", data, control);
+                            temp.setIconImage(getFDImage());
+                            temp.setSize(600, 400);
+                            temp.setVisible(true);
+                            break;
+                        case 11:
+                            temp = new OrderTransportEdit("Изменить транспорт заказа", data, control);
+                            temp.setIconImage(getFDImage());
+                            temp.setSize(600, 400);
+                            temp.setVisible(true);
+                            break;
+                        case 12:
+                            temp = new PlaceEdit("Изменить место", data, control);
+                            temp.setIconImage(getFDImage());
+                            temp.setSize(600, 400);
+                            temp.setVisible(true);
+                            break;
+                        case 13:
+                            temp = new ProductEdit("Изменить товар", data, control);
+                            temp.setIconImage(getFDImage());
+                            temp.setSize(600, 400);
+                            temp.setVisible(true);
+                            break;
+                        case 14:
+                            temp = new ProductsCategoryEdit("Изменить категорию товара", data, control);
+                            temp.setIconImage(getFDImage());
+                            temp.setSize(600, 400);
+                            temp.setVisible(true);
+                            break;
+                        case 15:
+                            temp = new ServiceEdit("Изменить услугу", data, control);
+                            temp.setIconImage(getFDImage());
+                            temp.setSize(600, 400);
+                            temp.setVisible(true);
+                            break;
+                        case 16:
+                            temp = new TransportEdit("Изменить транспорт", data, control);
+                            temp.setIconImage(getFDImage());
+                            temp.setSize(600, 400);
+                            temp.setVisible(true);
+                            break;
+                    }
+                }
             }
         });
         button17.addActionListener(new ActionListener() {
@@ -318,6 +422,17 @@ public class MainForm extends JFrame {
                 control.setUpdate(true);
             }
         });
+    }
+
+    private void newFilter(Controller control) {
+        RowFilter<MyTableModel, Object> rf = null;
+        //If current expression doesn't parse, don't update.
+        try {
+            rf = RowFilter.regexFilter(filter.getText(), 0);
+        } catch (java.util.regex.PatternSyntaxException g) {
+            return;
+        }
+        control.getSorter().setRowFilter(rf);
     }
 
     protected static Image getFDImage() {

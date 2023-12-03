@@ -1132,7 +1132,7 @@ public class DB {
         }
         return false;
     }
-    /*public boolean updateClient(int r, int c, Object data) {
+    public boolean updateClient(int r) {
         SQLServerDataSource ds = new SQLServerDataSource();
         ds.setUser("admin");
         ds.setPassword("admin");
@@ -1203,5 +1203,5 @@ public class DB {
             e.printStackTrace();
         }
         return false;
-    }*/
+    }
 }
