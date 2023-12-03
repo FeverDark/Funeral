@@ -9,11 +9,6 @@ public class Service extends JFrame {
     private JTextField textField3;
     private JButton addButton;
 
-    private void Exit(){
-        this.setVisible(false);
-        this.dispose();
-    }
-
     public Service(String title, DB data, Controller control) {
         super(title);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -22,29 +17,37 @@ public class Service extends JFrame {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (textField1.getText().isEmpty() || textField2.getText().isEmpty() || textField3.getText().isEmpty()){
+                if (textField1.getText().isEmpty() || textField2.getText().isEmpty() || textField3.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(new JFrame(), "Поля должны быть заполненными.");
                     return;
                 }
-                for(int i = 0; i < data.getService().length; ++i){
-                    if (textField1.getText().equals(data.getService()[i][0].toString())) {JOptionPane.showMessageDialog(new JFrame(), "ID должен быть уникальным."); return;}
+                for (int i = 0; i < data.getService().length; ++i) {
+                    if (textField1.getText().equals(data.getService()[i][0].toString())) {
+                        JOptionPane.showMessageDialog(new JFrame(), "ID должен быть уникальным.");
+                        return;
+                    }
                 }
                 try {
                     Integer.parseInt(textField1.getText());
-                } catch(NumberFormatException c){
+                } catch (NumberFormatException c) {
                     JOptionPane.showMessageDialog(new JFrame(), "Неправильно введен ID.");
                     return;
                 }
                 try {
                     Integer.parseInt(textField3.getText());
-                } catch(NumberFormatException c){
+                } catch (NumberFormatException c) {
                     JOptionPane.showMessageDialog(new JFrame(), "Неправильно введена цена.");
                     return;
                 }
-                // ADD
+                data.addService(textField1.getText(), textField2.getText(), textField3.getText());
                 Exit();
                 control.setUpdate(true);
             }
         });
+    }
+
+    private void Exit() {
+        this.setVisible(false);
+        this.dispose();
     }
 }

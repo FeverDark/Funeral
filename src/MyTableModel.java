@@ -1,7 +1,11 @@
 import javax.swing.table.AbstractTableModel;
 
 class MyTableModel extends AbstractTableModel {
-    private boolean DEBUG = true;
+    private final boolean DEBUG = true;
+    private int editCall = 0;
+    private String[] columnNames = {};
+    private Object[][] data = {};
+
     public int getEditCall() {
         return editCall;
     }
@@ -10,7 +14,6 @@ class MyTableModel extends AbstractTableModel {
         this.editCall = editCall;
     }
 
-    private int editCall = 0;
     public String[] getColumnNames() {
         return columnNames;
     }
@@ -19,8 +22,6 @@ class MyTableModel extends AbstractTableModel {
         this.columnNames = columnNames;
     }
 
-    private String[] columnNames = {};
-
     public Object[][] getData() {
         return data;
     }
@@ -28,8 +29,6 @@ class MyTableModel extends AbstractTableModel {
     public void setData(Object[][] data) {
         this.data = data;
     }
-
-    private Object[][] data = {};
 
     public int getColumnCount() {
         return columnNames.length;
@@ -44,22 +43,19 @@ class MyTableModel extends AbstractTableModel {
     }
 
     public Object getValueAt(int row, int col) {
-        if (data[row][col] == null){
+        if (data[row][col] == null) {
             return "";
         }
         return data[row][col];
     }
+
     public Class getColumnClass(int c) {
         return getValueAt(0, c).getClass();
     }
 
     public boolean isCellEditable(int row, int col) {
         //if (col < editCall) {
-        if (true) {
-            return false;
-        } else {
-            return true;
-        }
+        return false;
     }
 
     public void setValueAt(Object value, int row, int col) {
@@ -83,9 +79,9 @@ class MyTableModel extends AbstractTableModel {
         int numRows = getRowCount();
         int numCols = getColumnCount();
 
-        for (int i=0; i < numRows; i++) {
+        for (int i = 0; i < numRows; i++) {
             System.out.print("    row " + i + ":");
-            for (int j=0; j < numCols; j++) {
+            for (int j = 0; j < numCols; j++) {
                 System.out.print("  " + data[i][j]);
             }
             System.out.println();

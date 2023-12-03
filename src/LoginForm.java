@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class LoginForm extends JFrame{
+public class LoginForm extends JFrame {
     private JPanel mainPanel;
     private JTextField loginField;
     private JTextField passwordField;
@@ -21,7 +21,7 @@ public class LoginForm extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 boolean login = data.login(loginField.getText(), passwordField.getText());
-                if (login){
+                if (login) {
                     data.isLogged = true;
                     control.setState(1);
                 }

@@ -1,38 +1,32 @@
-
-
 import javax.swing.*;
 import java.awt.*;
 
 import static java.lang.Thread.sleep;
 
 
-class ComboItem
-{
-    private String key;
-    private String value;
+class ComboItem {
+    private final String key;
+    private final String value;
 
-    public ComboItem(String key, String value)
-    {
+    public ComboItem(String key, String value) {
         this.key = key;
         this.value = value;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return key;
     }
 
-    public String getKey()
-    {
+    public String getKey() {
         return key;
     }
 
-    public String getValue()
-    {
+    public String getValue() {
         return value;
     }
 }
+
 public class Main {
     protected static Image getFDImage() {
         java.net.URL imgURL = Main.class.getResource("images/favicon.png");
@@ -51,7 +45,7 @@ public class Main {
         mainFrame.setIconImage(getFDImage());
         mainFrame.setSize(1200, 800);
         mainFrame.setVisible(true);
-        while (!mainData.isLogged){
+        while (!mainData.isLogged) {
             sleep(0);
         }
         //mainData.getData();
@@ -70,10 +64,13 @@ public class Main {
         int oldState = 0;
         while (mainData.isLogged) {
             int tempState = control.getState();
-            //System.out.println(control.isUpdate());
             if (tempState != oldState || control.isUpdate()) {
                 control.setUpdate(false);
-                new Thread(new Runnable() {public void run() {mainData.getData();}}).start();
+                new Thread(new Runnable() {
+                    public void run() {
+                        mainData.getData();
+                    }
+                }).start();
                 Thread.sleep(100);
                 switch (tempState) {
                     case 1:
@@ -125,7 +122,6 @@ public class Main {
                         control.selectData(mainFrame, mainData, mainData.transport, mainData.transportNames, "Транспорт", 1);
                         break;
                 }
-                //else control.selectClient(mainFrame, mainData);
                 oldState = tempState;
             }
         }

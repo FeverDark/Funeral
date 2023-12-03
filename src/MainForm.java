@@ -1,35 +1,11 @@
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.regex.PatternSyntaxException;
 
-public class MainForm extends JFrame{
-    protected static Image getFDImage() {
-        java.net.URL imgURL = Main.class.getResource("images/favicon.png");
-        if (imgURL != null) {
-            return new ImageIcon(imgURL).getImage();
-        } else {
-            return null;
-        }
-    }
-    public JPanel getMainPanel() {
-        return mainPanel;
-    }
+public class MainForm extends JFrame {
     private JPanel mainPanel;
-
-    public JLabel getLabel1() {
-        return label1;
-    }
-
     private JLabel label1;
-
-    public JScrollPane getMainScroll() {
-        return mainScroll;
-    }
-
     private JScrollPane mainScroll;
     private JButton button1;
     private JButton button2;
@@ -52,9 +28,7 @@ public class MainForm extends JFrame{
     private JButton button19;
     private JTextField filter;
     private JButton button20;
-
     private JPanel tablePanel;
-
     public MainForm(String title, DB data, Controller control) {
         super(title);
 
@@ -344,5 +318,26 @@ public class MainForm extends JFrame{
                 control.setUpdate(true);
             }
         });
+    }
+
+    protected static Image getFDImage() {
+        java.net.URL imgURL = Main.class.getResource("images/favicon.png");
+        if (imgURL != null) {
+            return new ImageIcon(imgURL).getImage();
+        } else {
+            return null;
+        }
+    }
+
+    public JPanel getMainPanel() {
+        return mainPanel;
+    }
+
+    public JLabel getLabel1() {
+        return label1;
+    }
+
+    public JScrollPane getMainScroll() {
+        return mainScroll;
     }
 }
