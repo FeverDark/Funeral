@@ -218,91 +218,91 @@ public class MainForm extends JFrame {
                             temp.setVisible(true);
                             break;
                         case 2:
-                            temp = new ContractorEdit("Изменить подрядчика", data, control);
+                            temp = new ContractorEdit("Изменить подрядчика", data, control, control.getTempTable().convertRowIndexToModel(control.getTempTable().getSelectedRow()));
                             temp.setIconImage(getFDImage());
                             temp.setSize(600, 400);
                             temp.setVisible(true);
                             break;
                         case 3:
-                            temp = new CorpseEdit("Изменить тело", data, control);
+                            temp = new CorpseEdit("Изменить тело", data, control, control.getTempTable().convertRowIndexToModel(control.getTempTable().getSelectedRow()));
                             temp.setIconImage(getFDImage());
                             temp.setSize(600, 400);
                             temp.setVisible(true);
                             break;
                         case 4:
-                            temp = new DocumentEdit("Изменить документ", data, control);
+                            temp = new DocumentEdit("Изменить документ", data, control, control.getTempTable().convertRowIndexToModel(control.getTempTable().getSelectedRow()));
                             temp.setIconImage(getFDImage());
                             temp.setSize(600, 400);
                             temp.setVisible(true);
                             break;
                         case 5:
-                            temp = new EmployerEdit("Изменить сотрудника", data, control);
+                            temp = new EmployerEdit("Изменить сотрудника", data, control, control.getTempTable().convertRowIndexToModel(control.getTempTable().getSelectedRow()));
                             temp.setIconImage(getFDImage());
                             temp.setSize(600, 400);
                             temp.setVisible(true);
                             break;
                         case 6:
-                            temp = new GraveyardEdit("Изменить место на кладбище", data, control);
+                            temp = new GraveyardEdit("Изменить место на кладбище", data, control, control.getTempTable().convertRowIndexToModel(control.getTempTable().getSelectedRow()));
                             temp.setIconImage(getFDImage());
                             temp.setSize(600, 400);
                             temp.setVisible(true);
                             break;
                         case 7:
-                            temp = new OrderingEdit("Изменить заказ", data, control);
+                            temp = new OrderingEdit("Изменить заказ", data, control, control.getTempTable().convertRowIndexToModel(control.getTempTable().getSelectedRow()));
                             temp.setIconImage(getFDImage());
                             temp.setSize(600, 400);
                             temp.setVisible(true);
                             break;
                         case 8:
-                            temp = new OrderPlaceEdit("Изменить место заказа", data, control);
+                            temp = new OrderPlaceEdit("Изменить место заказа", data, control, control.getTempTable().convertRowIndexToModel(control.getTempTable().getSelectedRow()));
                             temp.setIconImage(getFDImage());
                             temp.setSize(750, 400);
                             temp.setVisible(true);
                             break;
                         case 9:
-                            temp = new OrderProductsEdit("Изменить товар заказа", data, control);
+                            temp = new OrderProductsEdit("Изменить товар заказа", data, control, control.getTempTable().convertRowIndexToModel(control.getTempTable().getSelectedRow()));
                             temp.setIconImage(getFDImage());
                             temp.setSize(600, 400);
                             temp.setVisible(true);
                             break;
                         case 10:
-                            temp = new OrderServicesEdit("Изменить услугу заказа", data, control);
+                            temp = new OrderServicesEdit("Изменить услугу заказа", data, control, control.getTempTable().convertRowIndexToModel(control.getTempTable().getSelectedRow()));
                             temp.setIconImage(getFDImage());
                             temp.setSize(600, 400);
                             temp.setVisible(true);
                             break;
                         case 11:
-                            temp = new OrderTransportEdit("Изменить транспорт заказа", data, control);
+                            temp = new OrderTransportEdit("Изменить транспорт заказа", data, control, control.getTempTable().convertRowIndexToModel(control.getTempTable().getSelectedRow()));
                             temp.setIconImage(getFDImage());
                             temp.setSize(600, 400);
                             temp.setVisible(true);
                             break;
                         case 12:
-                            temp = new PlaceEdit("Изменить место", data, control);
+                            temp = new PlaceEdit("Изменить место", data, control, control.getTempTable().convertRowIndexToModel(control.getTempTable().getSelectedRow()));
                             temp.setIconImage(getFDImage());
                             temp.setSize(600, 400);
                             temp.setVisible(true);
                             break;
                         case 13:
-                            temp = new ProductEdit("Изменить товар", data, control);
+                            temp = new ProductEdit("Изменить товар", data, control, control.getTempTable().convertRowIndexToModel(control.getTempTable().getSelectedRow()));
                             temp.setIconImage(getFDImage());
                             temp.setSize(600, 400);
                             temp.setVisible(true);
                             break;
                         case 14:
-                            temp = new ProductsCategoryEdit("Изменить категорию товара", data, control);
+                            temp = new ProductsCategoryEdit("Изменить категорию товара", data, control, control.getTempTable().convertRowIndexToModel(control.getTempTable().getSelectedRow()));
                             temp.setIconImage(getFDImage());
                             temp.setSize(600, 400);
                             temp.setVisible(true);
                             break;
                         case 15:
-                            temp = new ServiceEdit("Изменить услугу", data, control);
+                            temp = new ServiceEdit("Изменить услугу", data, control, control.getTempTable().convertRowIndexToModel(control.getTempTable().getSelectedRow()));
                             temp.setIconImage(getFDImage());
                             temp.setSize(600, 400);
                             temp.setVisible(true);
                             break;
                         case 16:
-                            temp = new TransportEdit("Изменить транспорт", data, control);
+                            temp = new TransportEdit("Изменить транспорт", data, control, control.getTempTable().convertRowIndexToModel(control.getTempTable().getSelectedRow()));
                             temp.setIconImage(getFDImage());
                             temp.setSize(600, 400);
                             temp.setVisible(true);
@@ -428,7 +428,7 @@ public class MainForm extends JFrame {
         RowFilter<MyTableModel, Object> rf = null;
         //If current expression doesn't parse, don't update.
         try {
-            rf = RowFilter.regexFilter(filter.getText(), 0);
+            rf = RowFilter.regexFilter(filter.getText(), 0, 1, 2, 3, 4, 5, 6);
         } catch (java.util.regex.PatternSyntaxException g) {
             return;
         }

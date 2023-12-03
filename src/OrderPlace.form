@@ -13,7 +13,8 @@
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Номер заказа"/>
+          <text value="Номер заказа (*)"/>
+          <toolTipText value="Обязательно к заполнению"/>
         </properties>
       </component>
       <component id="1167d" class="javax.swing.JLabel">
@@ -21,20 +22,25 @@
           <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Место"/>
+          <text value="Место (*)"/>
+          <toolTipText value="Обязательно к заполнению"/>
         </properties>
       </component>
       <component id="f1da3" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
         <constraints>
           <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Обязательно к заполнению"/>
+        </properties>
       </component>
       <component id="c37ca" class="javax.swing.JComboBox" binding="comboBox2" default-binding="true">
         <constraints>
           <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Обязательно к заполнению"/>
+        </properties>
       </component>
       <component id="173e" class="javax.swing.JButton" binding="addButton">
         <constraints>

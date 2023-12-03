@@ -13,7 +13,8 @@
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="ID"/>
+          <text value="ID (*)"/>
+          <toolTipText value="Обязательно к заполнению"/>
         </properties>
       </component>
       <component id="81c62" class="javax.swing.JLabel">
@@ -21,7 +22,8 @@
           <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="ФИО"/>
+          <text value="ФИО (*)"/>
+          <toolTipText value="Обязательно к заполнению"/>
         </properties>
       </component>
       <component id="b6470" class="javax.swing.JLabel">
@@ -29,7 +31,8 @@
           <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Должность"/>
+          <text value="Должность (*)"/>
+          <toolTipText value="Обязательно к заполнению"/>
         </properties>
       </component>
       <component id="ed814" class="javax.swing.JLabel">
@@ -37,7 +40,8 @@
           <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Телефон"/>
+          <text value="Телефон (*)"/>
+          <toolTipText value="Обязательно к заполнению"/>
         </properties>
       </component>
       <component id="1df28" class="javax.swing.JLabel">
@@ -46,6 +50,7 @@
         </constraints>
         <properties>
           <text value="Стаж"/>
+          <toolTipText value="Не обязательно к заполнению"/>
         </properties>
       </component>
       <component id="3498a" class="javax.swing.JLabel">
@@ -54,6 +59,7 @@
         </constraints>
         <properties>
           <text value="Логин"/>
+          <toolTipText value="Не обязательно к заполнению"/>
         </properties>
       </component>
       <component id="83c18" class="javax.swing.JLabel">
@@ -62,6 +68,7 @@
         </constraints>
         <properties>
           <text value="Пароль"/>
+          <toolTipText value="Не обязательно к заполнению"/>
         </properties>
       </component>
       <component id="3afc9" class="javax.swing.JButton" binding="addButton">
@@ -98,7 +105,9 @@
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Обязательно к заполнению"/>
+        </properties>
       </component>
       <component id="723a8" class="javax.swing.JTextField" binding="textField2" default-binding="true">
         <constraints>
@@ -106,7 +115,9 @@
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Обязательно к заполнению"/>
+        </properties>
       </component>
       <component id="fbd54" class="javax.swing.JTextField" binding="textField3" default-binding="true">
         <constraints>
@@ -114,7 +125,9 @@
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Обязательно к заполнению"/>
+        </properties>
       </component>
       <component id="d507b" class="javax.swing.JTextField" binding="textField4" default-binding="true">
         <constraints>
@@ -122,7 +135,9 @@
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Обязательно к заполнению"/>
+        </properties>
       </component>
       <component id="26573" class="javax.swing.JTextField" binding="textField5" default-binding="true">
         <constraints>
@@ -130,7 +145,9 @@
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Не обязательно к заполнению"/>
+        </properties>
       </component>
       <component id="ddd65" class="javax.swing.JTextField" binding="textField6" default-binding="true">
         <constraints>
@@ -138,7 +155,9 @@
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Не обязательно к заполнению"/>
+        </properties>
       </component>
       <component id="ad2" class="javax.swing.JTextField" binding="textField7" default-binding="true">
         <constraints>
@@ -146,7 +165,9 @@
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Не обязательно к заполнению"/>
+        </properties>
       </component>
     </children>
   </grid>

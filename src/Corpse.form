@@ -13,7 +13,8 @@
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="ID"/>
+          <text value="ID (*)"/>
+          <toolTipText value="Обязательно к заполнению"/>
         </properties>
       </component>
       <component id="91f4" class="javax.swing.JLabel">
@@ -21,7 +22,7 @@
           <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="ФИО"/>
+          <text value="ФИО (*)"/>
         </properties>
       </component>
       <component id="b4376" class="javax.swing.JLabel">
@@ -29,7 +30,8 @@
           <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Дата рождения"/>
+          <text value="Дата рождения (*)"/>
+          <toolTipText value="Обязательно к заполнению"/>
         </properties>
       </component>
       <component id="f2b95" class="javax.swing.JLabel">
@@ -37,7 +39,8 @@
           <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Дата смерти"/>
+          <text value="Дата смерти (*)"/>
+          <toolTipText value="Обязательно к заполнению"/>
         </properties>
       </component>
       <component id="1e993" class="javax.swing.JLabel">
@@ -46,6 +49,7 @@
         </constraints>
         <properties>
           <text value="Состояние"/>
+          <toolTipText value="Не обязательно к заполнению"/>
         </properties>
       </component>
       <component id="c0b81" class="javax.swing.JLabel">
@@ -54,6 +58,7 @@
         </constraints>
         <properties>
           <text value="Номер заказа"/>
+          <toolTipText value="Не обязательно к заполнению"/>
         </properties>
       </component>
       <component id="18cdb" class="javax.swing.JButton" binding="addButton">
@@ -90,7 +95,9 @@
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Обязательно к заполнению"/>
+        </properties>
       </component>
       <component id="a8c9" class="javax.swing.JTextField" binding="textField2" default-binding="true">
         <constraints>
@@ -98,19 +105,25 @@
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Обязательно к заполнению"/>
+        </properties>
       </component>
       <component id="52b4d" class="com.github.lgooddatepicker.components.DatePicker" binding="datePicker1">
         <constraints>
           <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Обязательно к заполнению"/>
+        </properties>
       </component>
       <component id="14920" class="com.github.lgooddatepicker.components.DatePicker" binding="datePicker2">
         <constraints>
           <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Обязательно к заполнению"/>
+        </properties>
       </component>
       <component id="b5ee8" class="javax.swing.JTextField" binding="textField3" default-binding="true">
         <constraints>
@@ -118,13 +131,17 @@
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Не обязательно к заполнению"/>
+        </properties>
       </component>
       <component id="431a6" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
         <constraints>
           <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Не обязательно к заполнению"/>
+        </properties>
       </component>
     </children>
   </grid>

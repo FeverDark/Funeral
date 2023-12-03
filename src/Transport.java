@@ -19,7 +19,7 @@ public class Transport extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (textField1.getText().isEmpty() || textField2.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Поля должны быть заполненными.");
+                    JOptionPane.showMessageDialog(new JFrame(), "Основные поля должны быть заполненными.");
                     return;
                 }
                 for (int i = 0; i < data.getTransport().length; ++i) {

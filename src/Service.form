@@ -13,7 +13,8 @@
           <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Название услуги"/>
+          <text value="Название услуги (*)"/>
+          <toolTipText value="Обязательно к заполнению"/>
         </properties>
       </component>
       <component id="6381f" class="javax.swing.JLabel">
@@ -21,7 +22,8 @@
           <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Цена"/>
+          <text value="Цена (*)"/>
+          <toolTipText value="Обязательно к заполнению"/>
         </properties>
       </component>
       <component id="1a46c" class="javax.swing.JTextField" binding="textField1" default-binding="true">
@@ -30,7 +32,9 @@
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Обязательно к заполнению"/>
+        </properties>
       </component>
       <component id="9a421" class="javax.swing.JTextField" binding="textField2" default-binding="true">
         <constraints>
@@ -38,7 +42,9 @@
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Обязательно к заполнению"/>
+        </properties>
       </component>
       <component id="3294f" class="javax.swing.JTextField" binding="textField3" default-binding="true">
         <constraints>
@@ -46,7 +52,9 @@
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Обязательно к заполнению"/>
+        </properties>
       </component>
       <hspacer id="3a89e">
         <constraints>
@@ -81,7 +89,8 @@
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="ID"/>
+          <text value="ID (*)"/>
+          <toolTipText value="Обязательно к заполнению"/>
         </properties>
       </component>
     </children>

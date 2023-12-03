@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 
 public class ClientEdit extends JFrame {
     private JPanel mainPanel;
@@ -14,19 +15,23 @@ public class ClientEdit extends JFrame {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setContentPane(mainPanel);
         this.pack();
-        textField1.setText(data.getClient()[src][0].toString());
-        textField2.setText(data.getClient()[src][1].toString());
-        textField3.setText(data.getClient()[src][2].toString());
+        textField1.setText(Objects.toString(data.getClient()[src][0], ""));
+        textField2.setText(Objects.toString(data.getClient()[src][1], ""));
+        textField3.setText(Objects.toString(data.getClient()[src][2], ""));
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (textField1.getText().isEmpty() || textField2.getText().isEmpty() || textField3.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(new JFrame(), "Поля должны быть заполненными.");
+                    textField1.setText(Objects.toString(data.getClient()[src][0], ""));
+                    textField2.setText(Objects.toString(data.getClient()[src][1], ""));
+                    textField3.setText(Objects.toString(data.getClient()[src][2], ""));
                     return;
                 }
                 for (int i = 0; i < data.getClient().length; ++i) {
-                    if (textField1.getText().equals(data.getClient()[i][0].toString())) {
-                        JOptionPane.showMessageDialog(new JFrame(), "ID должен быть уникальным.");
+                    if (!textField1.getText().equals(data.getClient()[src][0].toString())) {
+                        JOptionPane.showMessageDialog(new JFrame(), "ID изменять нельзя.");
+                        textField1.setText(Objects.toString(data.getClient()[src][0], ""));
                         return;
                     }
                 }
@@ -34,9 +39,10 @@ public class ClientEdit extends JFrame {
                     Integer.parseInt(textField1.getText());
                 } catch (NumberFormatException c) {
                     JOptionPane.showMessageDialog(new JFrame(), "Неправильно введен ID.");
+                    textField1.setText(Objects.toString(data.getClient()[src][0], ""));
                     return;
                 }
-                data.addClient(textField1.getText(), textField2.getText(), textField3.getText());
+                //data.addClient(textField1.getText(), textField2.getText(), textField3.getText());
                 Exit();
                 control.setUpdate(true);
             }
