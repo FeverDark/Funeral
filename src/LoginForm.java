@@ -9,6 +9,7 @@ public class LoginForm extends JFrame{
     private JButton enterButton;
     private JLabel loginLabel;
     private JLabel passwordLabel;
+    private JLabel labelText;
 
     public LoginForm(String title, DB data, Controller control) {
         super(title);

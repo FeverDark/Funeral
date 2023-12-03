@@ -71,7 +71,20 @@
           <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="1" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <font swing-font="Button.font"/>
+          <foreground color="-13947600"/>
+          <hideActionText value="false"/>
           <text value="Войти"/>
+        </properties>
+      </component>
+      <component id="b52d6" class="javax.swing.JLabel" binding="labelText">
+        <constraints>
+          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font size="36"/>
+          <foreground color="-1"/>
+          <text value="Похоронное бюро"/>
         </properties>
       </component>
     </children>

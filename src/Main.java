@@ -5,13 +5,51 @@ import java.awt.*;
 
 import static java.lang.Thread.sleep;
 
+
+class ComboItem
+{
+    private String key;
+    private String value;
+
+    public ComboItem(String key, String value)
+    {
+        this.key = key;
+        this.value = value;
+    }
+
+    @Override
+    public String toString()
+    {
+        return key;
+    }
+
+    public String getKey()
+    {
+        return key;
+    }
+
+    public String getValue()
+    {
+        return value;
+    }
+}
 public class Main {
+    protected static Image getFDImage() {
+        java.net.URL imgURL = Main.class.getResource("images/favicon.png");
+        if (imgURL != null) {
+            return new ImageIcon(imgURL).getImage();
+        } else {
+            return null;
+        }
+    }
 
     public static void main(String[] args) throws InterruptedException {
         Controller control = new Controller();
         DB mainData = new DB();
-        JFrame mainFrame = new LoginForm("Temp", mainData, control);
-        mainFrame.setSize(500, 170);
+        //JFrame.setDefaultLookAndFeelDecorated(true);
+        JFrame mainFrame = new LoginForm("Похоронное бюро", mainData, control);
+        mainFrame.setIconImage(getFDImage());
+        mainFrame.setSize(1200, 800);
         mainFrame.setVisible(true);
         while (!mainData.isLogged){
             sleep(0);
@@ -21,68 +59,70 @@ public class Main {
             while (mainData.isLogged) {
                 mainData.getData();
                 try {
-                    sleep(10000);
+                    sleep(1);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
         };
         Thread updateThread = new Thread(taskUpdate);
-        updateThread.start();
+        //updateThread.start();
         int oldState = 0;
         while (mainData.isLogged) {
             int tempState = control.getState();
-            //System.out.println(tempState);
+            //System.out.println(control.isUpdate());
             if (tempState != oldState || control.isUpdate()) {
                 control.setUpdate(false);
+                new Thread(new Runnable() {public void run() {mainData.getData();}}).start();
+                Thread.sleep(100);
                 switch (tempState) {
                     case 1:
-                        control.selectClient(mainFrame, mainData);
+                        control.selectData(mainFrame, mainData, mainData.client, mainData.clientNames, "Клиенты", 1);
                         break;
                     case 2:
-                        control.selectContractor(mainFrame, mainData);
+                        control.selectData(mainFrame, mainData, mainData.contractor, mainData.contractorNames, "Подрядчики", 0);
                         break;
                     case 3:
-                        control.selectCorpse(mainFrame, mainData);
+                        control.selectData(mainFrame, mainData, mainData.corpse, mainData.corpseNames, "Тела", 1);
                         break;
                     case 4:
-                        control.selectDocument(mainFrame, mainData);
+                        control.selectData(mainFrame, mainData, mainData.documentConverted, mainData.documentNames, "Документы", 1);
                         break;
                     case 5:
-                        control.selectEmployer(mainFrame, mainData);
+                        control.selectData(mainFrame, mainData, mainData.employer, mainData.employerNames, "Сотрудники", 1);
                         break;
                     case 6:
-                        control.selectGraveyard(mainFrame, mainData);
+                        control.selectData(mainFrame, mainData, mainData.graveyard, mainData.graveyardNames, "Кладбища", 1);
                         break;
                     case 7:
-                        control.selectOrdering(mainFrame, mainData);
+                        control.selectData(mainFrame, mainData, mainData.orderingConverted, mainData.orderingNames, "Заказы", 1);
                         break;
                     case 8:
-                        control.selectOrderPlace(mainFrame, mainData);
+                        control.selectData(mainFrame, mainData, mainData.orderPlaceConverted, mainData.orderPlaceNames, "Места заказа", 0);
                         break;
                     case 9:
-                        control.selectOrderProducts(mainFrame, mainData);
+                        control.selectData(mainFrame, mainData, mainData.orderProductsConverted, mainData.orderProductsNames, "Товары заказа", 0);
                         break;
                     case 10:
-                        control.selectOrderServices(mainFrame, mainData);
+                        control.selectData(mainFrame, mainData, mainData.orderServicesConverted, mainData.orderServicesNames, "Услуги заказа", 0);
                         break;
                     case 11:
-                        control.selectOrderTransport(mainFrame, mainData);
+                        control.selectData(mainFrame, mainData, mainData.orderTransportConverted, mainData.orderTransportNames, "Транспорт заказа", 0);
                         break;
                     case 12:
-                        control.selectPlace(mainFrame, mainData);
+                        control.selectData(mainFrame, mainData, mainData.place, mainData.placeNames, "Места", 1);
                         break;
                     case 13:
-                        control.selectProduct(mainFrame, mainData);
+                        control.selectData(mainFrame, mainData, mainData.productConverted, mainData.productNames, "Товары", 1);
                         break;
                     case 14:
-                        control.selectProductsCategory(mainFrame, mainData);
+                        control.selectData(mainFrame, mainData, mainData.productsCategory, mainData.productsCategoryNames, "Категории товаров", 1);
                         break;
                     case 15:
-                        control.selectService(mainFrame, mainData);
+                        control.selectData(mainFrame, mainData, mainData.service, mainData.serviceNames, "Услуги", 1);
                         break;
                     case 16:
-                        control.selectTransport(mainFrame, mainData);
+                        control.selectData(mainFrame, mainData, mainData.transport, mainData.transportNames, "Транспорт", 1);
                         break;
                 }
                 //else control.selectClient(mainFrame, mainData);

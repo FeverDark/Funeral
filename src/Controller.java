@@ -1,7 +1,56 @@
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 
 public class Controller {
+    public void setUpColumn(JTable table, Object[][] data, int dataN, TableColumn col) {
+        //Set up the editor for the sport cells.
+        JComboBox comboBox = new JComboBox();
+        for(int i = 0; i < data.length; ++ i) {
+            comboBox.addItem(data[i][dataN].toString());
+        }
+
+        col.setCellEditor(new DefaultCellEditor(comboBox));
+
+        //Set up tool tips for the sport cells.
+        DefaultTableCellRenderer renderer =
+                new DefaultTableCellRenderer();
+        col.setCellRenderer(renderer);
+    }
+    public boolean voidCheck(Object data){
+        if (data == null || data.toString().isEmpty()){
+            JOptionPane.showMessageDialog(new JFrame(), "Поле не должно быть пустым.");
+            return true;
+        }
+        return false;
+    }
+    public boolean uniqueCheck(Object data, int r, int c, Object[][] check){
+        boolean unique = false;
+        for(int i = 0; i < check.length; ++i){
+            if (data.toString().equals(check[i][c].toString()) && i != r) {unique = true; break;}
+        }
+        if (unique) {
+            JOptionPane.showMessageDialog(new JFrame(), "Поле должно быть уникальным.");
+        }
+        return unique;
+    }
+    private boolean checkId(Object o, Object[][] ordering) {
+        for(int i = 0; i<ordering.length; ++ i) {
+            if (o.toString().equals(ordering[i][0].toString())) {
+                return false;
+            }
+        }
+        JOptionPane.showMessageDialog(new JFrame(), "Поле должно ссылаться на ключ.");
+        return true;
+    }
+    private TableRowSorter<MyTableModel> sorter;
     public int getState() {
         return state;
     }
@@ -31,161 +80,43 @@ public class Controller {
     public Controller(){
 
     }
-    public void selectClient(JFrame frame, DB data){
+    public void selectData(JFrame frame, DB data, Object[][] values, String[] names, String text, int cell){
         frame.getContentPane().removeAll();
-        MainForm mainForm = new MainForm("main", data, this);
-        tempTable = new JTable(data.client, data.clientNames);
+        MainForm mainForm = new MainForm("Похоронное бюро", data, this);
+        MyTableModel model = new MyTableModel();
+        model.setData(values);
+        model.setColumnNames(names);
+        model.setEditCall(cell);
+        sorter = new TableRowSorter<MyTableModel>(model);
+        tempTable = new JTable(model);
+        tempTable.setRowSorter(sorter);
         tempTable.setPreferredScrollableViewportSize(new Dimension(250, 100));
+        DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
+        leftRenderer.setHorizontalAlignment( JLabel.LEFT );
+        tempTable.setDefaultRenderer(String.class, leftRenderer);
+        tempTable.setDefaultRenderer(Integer.class, leftRenderer);
+        tempTable.setDefaultRenderer(Float.class, leftRenderer);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+        tempTable.getColumnModel().getColumn(0).setCellRenderer( centerRenderer );
+
+        tempTable.getSelectionModel().addListSelectionListener(
+                new ListSelectionListener() {
+                    public void valueChanged(ListSelectionEvent event) {
+                        int viewRow = tempTable.getSelectedRow();
+                        if (viewRow < 0) {
+                            //Selection got filtered away.
+                            //statusText.setText("");
+                        } else {
+                            int modelRow = tempTable.convertRowIndexToModel(viewRow);
+                            //System.out.println();
+                            //System.out.println(String.format("Selected Row in view: %d. " + "Selected Row in model: %d.", viewRow, modelRow));
+                        }
+                    }
+                }
+        );
         mainForm.getMainScroll().setViewportView(tempTable);
-        frame.setContentPane(mainForm.getMainPanel());
-        frame.revalidate();
-        frame.repaint();
-    }
-    public void selectContractor(JFrame frame, DB data){
-        frame.getContentPane().removeAll();
-        MainForm mainForm = new MainForm("main", data, this);
-        tempTable = new JTable(data.contractor, data.contractorNames);
-        tempTable.setPreferredScrollableViewportSize(new Dimension(250, 100));
-        mainForm.getMainScroll().setViewportView(tempTable);
-        frame.setContentPane(mainForm.getMainPanel());
-        frame.revalidate();
-        frame.repaint();
-    }
-    public void selectCorpse(JFrame frame, DB data){
-        frame.getContentPane().removeAll();
-        MainForm mainForm = new MainForm("main", data, this);
-        tempTable = new JTable(data.corpse, data.corpseNames);
-        tempTable.setPreferredScrollableViewportSize(new Dimension(250, 100));
-        mainForm.getMainScroll().setViewportView(tempTable);
-        frame.setContentPane(mainForm.getMainPanel());
-        frame.revalidate();
-        frame.repaint();
-    }
-    public void selectDocument(JFrame frame, DB data){
-        frame.getContentPane().removeAll();
-        MainForm mainForm = new MainForm("main", data, this);
-        tempTable = new JTable(data.document, data.documentNames);
-        tempTable.setPreferredScrollableViewportSize(new Dimension(250, 100));
-        mainForm.getMainScroll().setViewportView(tempTable);
-        frame.setContentPane(mainForm.getMainPanel());
-        frame.revalidate();
-        frame.repaint();
-    }
-    public void selectEmployer(JFrame frame, DB data){
-        frame.getContentPane().removeAll();
-        MainForm mainForm = new MainForm("main", data, this);
-        tempTable = new JTable(data.employer, data.employerNames);
-        tempTable.setPreferredScrollableViewportSize(new Dimension(250, 100));
-        mainForm.getMainScroll().setViewportView(tempTable);
-        frame.setContentPane(mainForm.getMainPanel());
-        frame.revalidate();
-        frame.repaint();
-    }
-    public void selectGraveyard(JFrame frame, DB data){
-        frame.getContentPane().removeAll();
-        MainForm mainForm = new MainForm("main", data, this);
-        tempTable = new JTable(data.graveyard, data.graveyardNames);
-        tempTable.setPreferredScrollableViewportSize(new Dimension(250, 100));
-        mainForm.getMainScroll().setViewportView(tempTable);
-        frame.setContentPane(mainForm.getMainPanel());
-        frame.revalidate();
-        frame.repaint();
-    }
-    public void selectOrdering(JFrame frame, DB data){
-        frame.getContentPane().removeAll();
-        MainForm mainForm = new MainForm("main", data, this);
-        tempTable = new JTable(data.ordering, data.orderingNames);
-        tempTable.setPreferredScrollableViewportSize(new Dimension(250, 100));
-        mainForm.getMainScroll().setViewportView(tempTable);
-        frame.setContentPane(mainForm.getMainPanel());
-        frame.revalidate();
-        frame.repaint();
-    }
-    public void selectOrderPlace(JFrame frame, DB data){
-        frame.getContentPane().removeAll();
-        MainForm mainForm = new MainForm("main", data, this);
-        tempTable = new JTable(data.orderPlace, data.orderPlaceNames);
-        tempTable.setPreferredScrollableViewportSize(new Dimension(250, 100));
-        mainForm.getMainScroll().setViewportView(tempTable);
-        frame.setContentPane(mainForm.getMainPanel());
-        frame.revalidate();
-        frame.repaint();
-    }
-    public void selectOrderProducts(JFrame frame, DB data){
-        frame.getContentPane().removeAll();
-        MainForm mainForm = new MainForm("main", data, this);
-        tempTable = new JTable(data.orderProducts, data.orderProductsNames);
-        tempTable.setPreferredScrollableViewportSize(new Dimension(250, 100));
-        mainForm.getMainScroll().setViewportView(tempTable);
-        frame.setContentPane(mainForm.getMainPanel());
-        frame.revalidate();
-        frame.repaint();
-    }
-    public void selectOrderServices(JFrame frame, DB data){
-        frame.getContentPane().removeAll();
-        MainForm mainForm = new MainForm("main", data, this);
-        tempTable = new JTable(data.orderServices, data.orderServicesNames);
-        tempTable.setPreferredScrollableViewportSize(new Dimension(250, 100));
-        mainForm.getMainScroll().setViewportView(tempTable);
-        frame.setContentPane(mainForm.getMainPanel());
-        frame.revalidate();
-        frame.repaint();
-    }
-    public void selectOrderTransport(JFrame frame, DB data){
-        frame.getContentPane().removeAll();
-        MainForm mainForm = new MainForm("main", data, this);
-        tempTable = new JTable(data.orderTransport, data.orderTransportNames);
-        tempTable.setPreferredScrollableViewportSize(new Dimension(250, 100));
-        mainForm.getMainScroll().setViewportView(tempTable);
-        frame.setContentPane(mainForm.getMainPanel());
-        frame.revalidate();
-        frame.repaint();
-    }
-    public void selectPlace(JFrame frame, DB data){
-        frame.getContentPane().removeAll();
-        MainForm mainForm = new MainForm("main", data, this);
-        tempTable = new JTable(data.place, data.placeNames);
-        tempTable.setPreferredScrollableViewportSize(new Dimension(250, 100));
-        mainForm.getMainScroll().setViewportView(tempTable);
-        frame.setContentPane(mainForm.getMainPanel());
-        frame.revalidate();
-        frame.repaint();
-    }
-    public void selectProduct(JFrame frame, DB data){
-        frame.getContentPane().removeAll();
-        MainForm mainForm = new MainForm("main", data, this);
-        tempTable = new JTable(data.productConverted, data.productNames);
-        tempTable.setPreferredScrollableViewportSize(new Dimension(250, 100));
-        mainForm.getMainScroll().setViewportView(tempTable);
-        frame.setContentPane(mainForm.getMainPanel());
-        frame.revalidate();
-        frame.repaint();
-    }
-    public void selectProductsCategory(JFrame frame, DB data){
-        frame.getContentPane().removeAll();
-        MainForm mainForm = new MainForm("main", data, this);
-        tempTable = new JTable(data.productsCategory, data.productsCategoryNames);
-        tempTable.setPreferredScrollableViewportSize(new Dimension(250, 100));
-        mainForm.getMainScroll().setViewportView(tempTable);
-        frame.setContentPane(mainForm.getMainPanel());
-        frame.revalidate();
-        frame.repaint();
-    }public void selectService(JFrame frame, DB data){
-        frame.getContentPane().removeAll();
-        MainForm mainForm = new MainForm("main", data, this);
-        tempTable = new JTable(data.service, data.serviceNames);
-        tempTable.setPreferredScrollableViewportSize(new Dimension(250, 100));
-        mainForm.getMainScroll().setViewportView(tempTable);
-        frame.setContentPane(mainForm.getMainPanel());
-        frame.revalidate();
-        frame.repaint();
-    }
-    public void selectTransport(JFrame frame, DB data){
-        frame.getContentPane().removeAll();
-        MainForm mainForm = new MainForm("main", data, this);
-        tempTable = new JTable(data.transport, data.transportNames);
-        tempTable.setPreferredScrollableViewportSize(new Dimension(250, 100));
-        mainForm.getMainScroll().setViewportView(tempTable);
+        mainForm.getLabel1().setText(text);
         frame.setContentPane(mainForm.getMainPanel());
         frame.revalidate();
         frame.repaint();
