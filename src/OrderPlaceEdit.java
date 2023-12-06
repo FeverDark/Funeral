@@ -24,19 +24,24 @@ public class OrderPlaceEdit extends JFrame {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (int i = 0; i != data.getOrderPlace().length; ++i) {
-                    if (data.getOrderPlace()[i][0].toString().equals(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                        if (data.getOrderPlace()[i][1].toString().equals(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
-                            JOptionPane.showMessageDialog(new JFrame(), "Место уже есть в заказе.");
-                            comboBox1.setSelectedIndex(Integer.parseInt(data.getOrderPlace()[src][0].toString()) - 1);
-                            comboBox2.setSelectedIndex(Integer.parseInt(data.getOrderPlace()[src][1].toString()) - 1);
-                            return;
+                if (((ComboItem) comboBox1.getSelectedItem()).getValue().toString().equals(data.getOrderPlace()[src][0].toString()) &&
+                        ((ComboItem) comboBox2.getSelectedItem()).getValue().toString().equals(data.getOrderPlace()[src][1].toString())) {
+                    Exit();
+                } else {
+                    for (int i = 0; i != data.getOrderPlace().length; ++i) {
+                        if (data.getOrderPlace()[i][0].toString().equals(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                            if (data.getOrderPlace()[i][1].toString().equals(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
+                                JOptionPane.showMessageDialog(new JFrame(), "Место уже есть в заказе.");
+                                comboBox1.setSelectedIndex(Integer.parseInt(data.getOrderPlace()[src][0].toString()) - 1);
+                                comboBox2.setSelectedIndex(Integer.parseInt(data.getOrderPlace()[src][1].toString()) - 1);
+                                return;
+                            }
                         }
                     }
+                    data.updateOrderPlace(((ComboItem) comboBox1.getSelectedItem()).getValue(), ((ComboItem) comboBox2.getSelectedItem()).getValue(), data.getOrderPlace()[src][0].toString(), data.getOrderPlace()[src][1].toString());
+                    Exit();
+                    control.setUpdate(true);
                 }
-                //data.addOrderPlace(((ComboItem) comboBox1.getSelectedItem()).getValue(), ((ComboItem) comboBox2.getSelectedItem()).getValue());
-                Exit();
-                control.setUpdate(true);
             }
         });
     }

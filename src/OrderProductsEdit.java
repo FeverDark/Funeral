@@ -27,24 +27,38 @@ public class OrderProductsEdit extends JFrame {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (textField1.getText().isEmpty() || textField1.getText().equals("0")) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Количество не должно быть нулевым или пустым.");
-                    textField1.setText(Objects.toString(data.getOrderProducts()[src][2], ""));
-                    return;
-                }
-                for (int i = 0; i != data.getOrderProducts().length; ++i) {
-                    if (data.getOrderProducts()[i][0].toString().equals(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
-                        if (data.getOrderProducts()[i][1].toString().equals(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                            JOptionPane.showMessageDialog(new JFrame(), "Товар уже есть в заказе.");
-                            comboBox2.setSelectedIndex(Integer.parseInt(data.getOrderProducts()[src][0].toString()) - 1);
-                            comboBox1.setSelectedIndex(Integer.parseInt(data.getOrderProducts()[src][1].toString()) - 1);
-                            return;
+                if (textField1.getText().equals(Objects.toString(data.getOrderProducts()[src][2], "")) &&
+                        ((ComboItem) comboBox2.getSelectedItem()).getValue().toString().equals(data.getOrderProducts()[src][0].toString()) &&
+                        ((ComboItem) comboBox1.getSelectedItem()).getValue().toString().equals(data.getOrderProducts()[src][1].toString())) {
+                    Exit();
+                } else {
+                    if (textField1.getText().isEmpty() || textField1.getText().equals("0")) {
+                        JOptionPane.showMessageDialog(new JFrame(), "Количество не должно быть нулевым или пустым.");
+                        textField1.setText(Objects.toString(data.getOrderProducts()[src][2], ""));
+                        return;
+                    }
+                    for (int i = 0; i != data.getOrderProducts().length; ++i) {
+                        if (data.getOrderProducts()[i][0].toString().equals(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
+                            if (data.getOrderProducts()[i][1].toString().equals(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                                if (textField1.getText().equals(Objects.toString(data.getOrderProducts()[src][2], ""))) {
+                                    JOptionPane.showMessageDialog(new JFrame(), "Товар уже есть в заказе.");
+                                    comboBox2.setSelectedIndex(Integer.parseInt(data.getOrderProducts()[src][0].toString()) - 1);
+                                    comboBox1.setSelectedIndex(Integer.parseInt(data.getOrderProducts()[src][1].toString()) - 1);
+                                    return;
+                                }
+                            }
                         }
                     }
+                    try {
+                        Integer.parseInt(textField1.getText());
+                    } catch (NumberFormatException c) {
+                        JOptionPane.showMessageDialog(new JFrame(), "Неправильно введено количество.");
+                        return;
+                    }
+                    data.updateOrderProducts(((ComboItem) comboBox2.getSelectedItem()).getValue(), ((ComboItem) comboBox1.getSelectedItem()).getValue(), textField1.getText(), data.getOrderProducts()[src][0].toString(), data.getOrderProducts()[src][1].toString());
+                    Exit();
+                    control.setUpdate(true);
                 }
-                //data.addOrderProducts(((ComboItem) comboBox1.getSelectedItem()).getValue(), ((ComboItem) comboBox2.getSelectedItem()).getValue(), textField1.getText());
-                Exit();
-                control.setUpdate(true);
             }
         });
     }

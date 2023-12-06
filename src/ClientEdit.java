@@ -21,30 +21,34 @@ public class ClientEdit extends JFrame {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (textField1.getText().isEmpty() || textField2.getText().isEmpty() || textField3.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Поля должны быть заполненными.");
-                    textField1.setText(Objects.toString(data.getClient()[src][0], ""));
-                    textField2.setText(Objects.toString(data.getClient()[src][1], ""));
-                    textField3.setText(Objects.toString(data.getClient()[src][2], ""));
-                    return;
-                }
-                for (int i = 0; i < data.getClient().length; ++i) {
-                    if (!textField1.getText().equals(data.getClient()[src][0].toString())) {
-                        JOptionPane.showMessageDialog(new JFrame(), "ID изменять нельзя.");
+                if (textField1.getText().equals(Objects.toString(data.getClient()[src][0], "")) && textField2.getText().equals(Objects.toString(data.getClient()[src][1], "")) && textField3.getText().equals(Objects.toString(data.getClient()[src][2], ""))) {
+                    Exit();
+                } else {
+                    if (textField1.getText().isEmpty() || textField2.getText().isEmpty() || textField3.getText().isEmpty()) {
+                        JOptionPane.showMessageDialog(new JFrame(), "Поля должны быть заполненными.");
+                        textField1.setText(Objects.toString(data.getClient()[src][0], ""));
+                        textField2.setText(Objects.toString(data.getClient()[src][1], ""));
+                        textField3.setText(Objects.toString(data.getClient()[src][2], ""));
+                        return;
+                    }
+                    for (int i = 0; i < data.getClient().length; ++i) {
+                        if (!textField1.getText().equals(data.getClient()[src][0].toString())) {
+                            JOptionPane.showMessageDialog(new JFrame(), "ID изменять нельзя.");
+                            textField1.setText(Objects.toString(data.getClient()[src][0], ""));
+                            return;
+                        }
+                    }
+                    try {
+                        Integer.parseInt(textField1.getText());
+                    } catch (NumberFormatException c) {
+                        JOptionPane.showMessageDialog(new JFrame(), "Неправильно введен ID.");
                         textField1.setText(Objects.toString(data.getClient()[src][0], ""));
                         return;
                     }
+                    data.updateClient(textField1.getText(), textField2.getText(), textField3.getText());
+                    Exit();
+                    control.setUpdate(true);
                 }
-                try {
-                    Integer.parseInt(textField1.getText());
-                } catch (NumberFormatException c) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Неправильно введен ID.");
-                    textField1.setText(Objects.toString(data.getClient()[src][0], ""));
-                    return;
-                }
-                //data.addClient(textField1.getText(), textField2.getText(), textField3.getText());
-                Exit();
-                control.setUpdate(true);
             }
         });
     }

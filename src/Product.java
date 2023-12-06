@@ -4,7 +4,6 @@ import java.awt.event.ActionListener;
 
 public class Product extends JFrame {
     private JButton addButton;
-    private JTextField textField1;
     private JTextField textField2;
     private JTextField textField3;
     private JTextField textField4;
@@ -23,20 +22,8 @@ public class Product extends JFrame {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (textField1.getText().isEmpty() || textField2.getText().isEmpty() || textField4.getText().isEmpty()) {
+                if (textField2.getText().isEmpty() || textField4.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(new JFrame(), "Поля должны быть заполненными.");
-                    return;
-                }
-                for (int i = 0; i < data.getProduct().length; ++i) {
-                    if (textField1.getText().equals(data.getProduct()[i][0].toString())) {
-                        JOptionPane.showMessageDialog(new JFrame(), "ID должен быть уникальным.");
-                        return;
-                    }
-                }
-                try {
-                    Integer.parseInt(textField1.getText());
-                } catch (NumberFormatException c) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Неправильно введен ID.");
                     return;
                 }
                 try {
@@ -51,7 +38,7 @@ public class Product extends JFrame {
                     JOptionPane.showMessageDialog(new JFrame(), "Неправильно введено количество товаров.");
                     return;
                 }
-                data.addProduct(textField1.getText(), textField2.getText(), ((ComboItem) comboBox1.getSelectedItem()).getValue(), textField4.getText(), textField3.getText());
+                data.addProduct(textField2.getText(), ((ComboItem) comboBox1.getSelectedItem()).getValue(), textField4.getText(), textField3.getText());
                 Exit();
                 control.setUpdate(true);
             }

@@ -21,23 +21,31 @@ public class ContractorEdit extends JFrame {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (textField1.getText().isEmpty() || textField2.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Поля должны быть заполненными.");
-                    textField1.setText(Objects.toString(data.getContractor()[src][0], ""));
-                    textField2.setText(Objects.toString(data.getContractor()[src][1], ""));
-                    textField3.setText(Objects.toString(data.getContractor()[src][2], ""));
-                    return;
+                if (!data.superUser) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Только руководство может изменять подрядчиков.");
+                    Exit();
                 }
-                for (int i = 0; i < data.getContractor().length; ++i) {
-                    if (textField1.getText().equals(data.getContractor()[i][0].toString())) {
-                        JOptionPane.showMessageDialog(new JFrame(), "Подрядчик должен быть уникальным.");
+                if (textField1.getText().equals(Objects.toString(data.getContractor()[src][0], "")) && textField2.getText().equals(Objects.toString(data.getContractor()[src][1], "")) && textField3.getText().equals(Objects.toString(data.getContractor()[src][2], ""))) {
+                    Exit();
+                } else {
+                    if (textField1.getText().isEmpty() || textField2.getText().isEmpty()) {
+                        JOptionPane.showMessageDialog(new JFrame(), "Поля должны быть заполненными.");
                         textField1.setText(Objects.toString(data.getContractor()[src][0], ""));
+                        textField2.setText(Objects.toString(data.getContractor()[src][1], ""));
+                        textField3.setText(Objects.toString(data.getContractor()[src][2], ""));
                         return;
                     }
+                    for (int i = 0; i < data.getContractor().length; ++i) {
+                        if (!textField1.getText().equals(data.getContractor()[src][0].toString())) {
+                            JOptionPane.showMessageDialog(new JFrame(), "Название подрядчика менять нельзя.");
+                            textField1.setText(Objects.toString(data.getContractor()[src][0], ""));
+                            return;
+                        }
+                    }
+                    data.updateContractor(textField1.getText(), textField2.getText(), textField3.getText());
+                    Exit();
+                    control.setUpdate(true);
                 }
-                //data.addContractor(textField1.getText(), textField2.getText(), textField3.getText());
-                Exit();
-                control.setUpdate(true);
             }
         });
     }

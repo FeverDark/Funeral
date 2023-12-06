@@ -30,11 +30,13 @@ public class MainForm extends JFrame {
     private JButton button19;
     private JTextField filter;
     private JButton button20;
+    private JButton orderButton;
+    private JButton checkButton;
+    private JButton exitButton;
     private JPanel tablePanel;
 
     public MainForm(String title, DB data, Controller control) {
         super(title);
-
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setContentPane(mainPanel);
         this.pack();
@@ -139,9 +141,11 @@ public class MainForm extends JFrame {
                     public void changedUpdate(DocumentEvent e) {
                         newFilter(control);
                     }
+
                     public void insertUpdate(DocumentEvent e) {
                         newFilter(control);
                     }
+
                     public void removeUpdate(DocumentEvent e) {
                         newFilter(control);
                     }
@@ -152,10 +156,13 @@ public class MainForm extends JFrame {
                 int tempState = control.getState();
                 switch (tempState) {
                     case 1:
-                        System.out.println(control.getTempTable().getSelectedRow());
                         data.deleteClient(control.getTempTable().convertRowIndexToModel(control.getTempTable().getSelectedRow()));
                         break;
                     case 2:
+                        if (!data.superUser) {
+                            JOptionPane.showMessageDialog(new JFrame(), "Только руководство может удалять подрядчиков.");
+                            return;
+                        }
                         data.deleteContractor(control.getTempTable().convertRowIndexToModel(control.getTempTable().getSelectedRow()));
                         break;
                     case 3:
@@ -165,6 +172,10 @@ public class MainForm extends JFrame {
                         data.deleteDocument(control.getTempTable().convertRowIndexToModel(control.getTempTable().getSelectedRow()));
                         break;
                     case 5:
+                        if (!data.superUser) {
+                            JOptionPane.showMessageDialog(new JFrame(), "Только руководство может увольнять сотрудников.");
+                            return;
+                        }
                         data.deleteEmployer(control.getTempTable().convertRowIndexToModel(control.getTempTable().getSelectedRow()));
                         break;
                     case 6:
@@ -198,6 +209,10 @@ public class MainForm extends JFrame {
                         data.deleteService(control.getTempTable().convertRowIndexToModel(control.getTempTable().getSelectedRow()));
                         break;
                     case 16:
+                        if (!data.superUser) {
+                            JOptionPane.showMessageDialog(new JFrame(), "Только руководство может удалять транспорт.");
+                            return;
+                        }
                         data.deleteTransport(control.getTempTable().convertRowIndexToModel(control.getTempTable().getSelectedRow()));
                         break;
                 }
@@ -207,7 +222,7 @@ public class MainForm extends JFrame {
         button18.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (control.getTempTable().getSelectedRow() != -1){
+                if (control.getTempTable().getSelectedRow() != -1) {
                     int tempState = control.getState();
                     JFrame temp;
                     switch (tempState) {
@@ -422,6 +437,39 @@ public class MainForm extends JFrame {
                 control.setUpdate(true);
             }
         });
+        orderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame temp = new OrderCreation("Создание заказа", data, control);
+                temp.setIconImage(getFDImage());
+                temp.setSize(1000, 600);
+                temp.setVisible(true);
+            }
+        });
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                data.isLogged = false;
+            }
+        });
+        checkButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame temp = new OrderCheck("Просмотр заказов", data, control);
+                temp.setIconImage(getFDImage());
+                temp.setSize(1000, 600);
+                temp.setVisible(true);
+            }
+        });
+    }
+
+    protected static Image getFDImage() {
+        java.net.URL imgURL = Main.class.getResource("images/favicon.png");
+        if (imgURL != null) {
+            return new ImageIcon(imgURL).getImage();
+        } else {
+            return null;
+        }
     }
 
     private void newFilter(Controller control) {
@@ -433,15 +481,6 @@ public class MainForm extends JFrame {
             return;
         }
         control.getSorter().setRowFilter(rf);
-    }
-
-    protected static Image getFDImage() {
-        java.net.URL imgURL = Main.class.getResource("images/favicon.png");
-        if (imgURL != null) {
-            return new ImageIcon(imgURL).getImage();
-        } else {
-            return null;
-        }
     }
 
     public JPanel getMainPanel() {

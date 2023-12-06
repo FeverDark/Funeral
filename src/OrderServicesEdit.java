@@ -24,19 +24,24 @@ public class OrderServicesEdit extends JFrame {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (int i = 0; i != data.getOrderServices().length; ++i) {
-                    if (data.getOrderServices()[i][0].toString().equals(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                        if (data.getOrderServices()[i][1].toString().equals(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
-                            JOptionPane.showMessageDialog(new JFrame(), "Услуга уже есть в заказе.");
-                            comboBox1.setSelectedIndex(Integer.parseInt(data.getOrderServices()[src][0].toString()) - 1);
-                            comboBox2.setSelectedIndex(Integer.parseInt(data.getOrderServices()[src][1].toString()) - 1);
-                            return;
+                if (((ComboItem) comboBox1.getSelectedItem()).getValue().toString().equals(data.getOrderServices()[src][0].toString()) &&
+                        ((ComboItem) comboBox2.getSelectedItem()).getValue().toString().equals(data.getOrderServices()[src][1].toString())) {
+                    Exit();
+                } else {
+                    for (int i = 0; i != data.getOrderServices().length; ++i) {
+                        if (data.getOrderServices()[i][0].toString().equals(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                            if (data.getOrderServices()[i][1].toString().equals(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
+                                JOptionPane.showMessageDialog(new JFrame(), "Услуга уже есть в заказе.");
+                                comboBox1.setSelectedIndex(Integer.parseInt(data.getOrderServices()[src][0].toString()) - 1);
+                                comboBox2.setSelectedIndex(Integer.parseInt(data.getOrderServices()[src][1].toString()) - 1);
+                                return;
+                            }
                         }
                     }
+                    data.updateOrderServices(((ComboItem) comboBox1.getSelectedItem()).getValue(), ((ComboItem) comboBox2.getSelectedItem()).getValue(), data.getOrderServices()[src][0].toString(), data.getOrderServices()[src][1].toString());
+                    Exit();
+                    control.setUpdate(true);
                 }
-                //data.addOrderServices(((ComboItem) comboBox1.getSelectedItem()).getValue(), ((ComboItem) comboBox2.getSelectedItem()).getValue());
-                Exit();
-                control.setUpdate(true);
             }
         });
     }

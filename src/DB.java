@@ -1,16 +1,20 @@
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import org.apache.commons.lang3.ArrayUtils;
 
+import javax.swing.*;
 import java.sql.*;
 import java.util.Arrays;
 
 public class DB {
     public boolean isLogged = false;
+    public boolean superUser = false;
+    public int employerId = -1;
+    public String employerName = null;
     public String[] clientNames = {"id", "name", "phone"};
     public String[] contractorNames = {"name", "contact", "classification"};
     public String[] corpseNames = {"id", "name", "birth_date", "death_dete", "stage", "order_id"};
     public String[] documentNames = {"id", "employer_id", "contractor", "order_id", "link"};
-    public String[] employerNames = {"id", "name", "job", "phone", "stage", "login_user", "pass"};
+    public String[] employerNames = {"id", "name", "job", "phone", "stage", "login_user", "pass", "fired"};
     public String[] graveyardNames = {"id", "name", "num", "price", "area", "order_id"};
     public String[] orderingNames = {"id", "client_id", "employer_id", "order_date", "price", "comm"};
     public String[] orderPlaceNames = {"order_id", "place_id"};
@@ -264,7 +268,7 @@ public class DB {
              CallableStatement cstmt = con.prepareCall("SELECT * FROM Employer")) {
             ResultSet rs = cstmt.executeQuery();
             while (rs.next()) {
-                Object[] temp = new Object[]{rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getString(6), rs.getString(7)};
+                Object[] temp = new Object[]{rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getString(6), rs.getString(7), rs.getBoolean(8) ? "Уволен" : ""};
                 tempemployer = Arrays.copyOf(tempemployer, tempemployer.length + 1);
                 tempemployer[tempemployer.length - 1] = temp;
             }
@@ -418,7 +422,7 @@ public class DB {
         documentConverted = Arrays.stream(document).map(Object[]::clone).toArray(Object[][]::new);
         for (int i = 0; i < documentConverted.length; ++i) {
             for (int j = 0; j < employer.length; ++j) {
-                if (documentConverted[i][1] == employer[j][0]) {
+                if (documentConverted[i][1].equals(employer[j][0])) {
                     documentConverted[i][1] = employer[j][1];
                 }
 
@@ -427,13 +431,13 @@ public class DB {
         orderingConverted = Arrays.stream(ordering).map(Object[]::clone).toArray(Object[][]::new);
         for (int i = 0; i < orderingConverted.length; ++i) {
             for (int j = 0; j < client.length; ++j) {
-                if (orderingConverted[i][1] == client[j][0]) {
+                if (orderingConverted[i][1].equals(client[j][0])) {
                     orderingConverted[i][1] = client[j][1];
                 }
 
             }
             for (int j = 0; j < employer.length; ++j) {
-                if (orderingConverted[i][2] == employer[j][0]) {
+                if (orderingConverted[i][2].equals(employer[j][0])) {
                     orderingConverted[i][2] = employer[j][1];
                 }
 
@@ -442,7 +446,7 @@ public class DB {
         orderPlaceConverted = Arrays.stream(orderPlace).map(Object[]::clone).toArray(Object[][]::new);
         for (int i = 0; i < orderPlaceConverted.length; ++i) {
             for (int j = 0; j < place.length; ++j) {
-                if (orderPlaceConverted[i][1] == place[j][0]) {
+                if (orderPlaceConverted[i][1].equals(place[j][0])) {
                     orderPlaceConverted[i][1] = place[j][1];
                 }
 
@@ -451,7 +455,7 @@ public class DB {
         orderProductsConverted = Arrays.stream(orderProducts).map(Object[]::clone).toArray(Object[][]::new);
         for (int i = 0; i < orderProductsConverted.length; ++i) {
             for (int j = 0; j < product.length; ++j) {
-                if (orderProductsConverted[i][1] == product[j][0]) {
+                if (orderProductsConverted[i][1].equals(product[j][0])) {
                     orderProductsConverted[i][1] = product[j][1];
                 }
 
@@ -460,7 +464,7 @@ public class DB {
         orderServicesConverted = Arrays.stream(orderServices).map(Object[]::clone).toArray(Object[][]::new);
         for (int i = 0; i < orderServicesConverted.length; ++i) {
             for (int j = 0; j < service.length; ++j) {
-                if (orderServicesConverted[i][1] == service[j][0]) {
+                if (orderServicesConverted[i][1].equals(service[j][0])) {
                     orderServicesConverted[i][1] = service[j][1];
                 }
 
@@ -469,7 +473,7 @@ public class DB {
         orderTransportConverted = Arrays.stream(orderTransport).map(Object[]::clone).toArray(Object[][]::new);
         for (int i = 0; i < orderTransportConverted.length; ++i) {
             for (int j = 0; j < transport.length; ++j) {
-                if (orderTransportConverted[i][1] == transport[j][0]) {
+                if (orderTransportConverted[i][1].equals(transport[j][0])) {
                     orderTransportConverted[i][1] = transport[j][1];
                 }
 
@@ -478,7 +482,7 @@ public class DB {
         productConverted = Arrays.stream(product).map(Object[]::clone).toArray(Object[][]::new);
         for (int i = 0; i < productConverted.length; ++i) {
             for (int j = 0; j < productsCategory.length; ++j) {
-                if (productConverted[i][2] == productsCategory[j][0]) {
+                if (productConverted[i][2].equals(productsCategory[j][0])) {
                     productConverted[i][2] = productsCategory[j][1];
                 }
 
@@ -486,7 +490,8 @@ public class DB {
         }
     }
 
-    public boolean login(String login, String password) {
+    public boolean[] login(String login, String password) {
+        boolean logged = false, superusr = false;
         SQLServerDataSource ds = new SQLServerDataSource();
         ds.setUser("admin");
         ds.setPassword("admin");
@@ -502,15 +507,47 @@ public class DB {
             cstmt.setString(2, login);
             cstmt.setString(3, password);
             cstmt.execute();
-            return cstmt.getBoolean(1);
+            logged = cstmt.getBoolean(1);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        try {
+            Connection con = ds.getConnection();
+            CallableStatement cstmt = con.prepareCall("{?=call dbo.superUser(?, ?)}");
+            cstmt.registerOutParameter(1, Types.BOOLEAN);
+            cstmt.setString(2, login);
+            cstmt.setString(3, password);
+            cstmt.execute();
+            superusr = cstmt.getBoolean(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            Connection con = ds.getConnection();
+            CallableStatement cstmt = con.prepareCall("{?=call dbo.getId(?)}");
+            cstmt.registerOutParameter(1, Types.INTEGER);
+            cstmt.setString(2, login);
+            cstmt.execute();
+            this.employerId = cstmt.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            Connection con = ds.getConnection();
+            CallableStatement cstmt = con.prepareCall("{?=call dbo.getName(?)}");
+            cstmt.registerOutParameter(1, Types.VARCHAR);
+            cstmt.setString(2, login);
+            cstmt.execute();
+            this.employerName = cstmt.getString(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return new boolean[]{logged, superusr};
     }
 
     public void deleteClient(int i) {
-        if (i > -1) {
+        if (i > -1 && i < client.length) {
             SQLServerDataSource ds = new SQLServerDataSource();
             ds.setUser("admin");
             ds.setPassword("admin");
@@ -524,13 +561,18 @@ public class DB {
                 cstmt.execute();
                 client = ArrayUtils.remove(client, i);
             } catch (SQLException e) {
-                e.printStackTrace();
+                if (e.getErrorCode() == 547) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                } else {
+                    System.out.println(e.getErrorCode());
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public void deleteContractor(int i) {
-        if (i > -1) {
+        if (i > -1 && i < contractor.length) {
             SQLServerDataSource ds = new SQLServerDataSource();
             ds.setUser("admin");
             ds.setPassword("admin");
@@ -540,17 +582,23 @@ public class DB {
             ds.setTrustServerCertificate(true);
 
             try (Connection con = ds.getConnection();
-                 CallableStatement cstmt = con.prepareCall("DELETE FROM Contractor WHERE name = '" + contractor[i][0] + "';")) {
+                 //CallableStatement cstmt = con.prepareCall("DELETE FROM Contractor WHERE name = '" + contractor[i][0] + "';")) {
+                 CallableStatement cstmt = con.prepareCall("UPDATE Contractor SET classification = 'Упразднено' WHERE name = '" + contractor[i][0] + "';")) {
                 cstmt.execute();
                 contractor = ArrayUtils.remove(contractor, i);
             } catch (SQLException e) {
-                e.printStackTrace();
+                if (e.getErrorCode() == 547) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                } else {
+                    System.out.println(e.getErrorCode());
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public void deleteCorpse(int i) {
-        if (i > -1) {
+        if (i > -1 && i < corpse.length) {
             SQLServerDataSource ds = new SQLServerDataSource();
             ds.setUser("admin");
             ds.setPassword("admin");
@@ -560,17 +608,23 @@ public class DB {
             ds.setTrustServerCertificate(true);
 
             try (Connection con = ds.getConnection();
-                 CallableStatement cstmt = con.prepareCall("DELETE FROM Corpse WHERE id = " + corpse[i][0])) {
+                 // CallableStatement cstmt = con.prepareCall("DELETE FROM Corpse WHERE id = " + corpse[i][0])) {
+                 CallableStatement cstmt = con.prepareCall("UPDATE Corpse SET stage = 'Захоронено' WHERE id = " + corpse[i][0])) {
                 cstmt.execute();
                 corpse = ArrayUtils.remove(corpse, i);
             } catch (SQLException e) {
-                e.printStackTrace();
+                if (e.getErrorCode() == 547) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                } else {
+                    System.out.println(e.getErrorCode());
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public void deleteDocument(int i) {
-        if (i > -1) {
+        if (i > -1 && i < document.length) {
             SQLServerDataSource ds = new SQLServerDataSource();
             ds.setUser("admin");
             ds.setPassword("admin");
@@ -584,13 +638,18 @@ public class DB {
                 cstmt.execute();
                 document = ArrayUtils.remove(document, i);
             } catch (SQLException e) {
-                e.printStackTrace();
+                if (e.getErrorCode() == 547) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                } else {
+                    System.out.println(e.getErrorCode());
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public void deleteEmployer(int i) {
-        if (i > -1) {
+        if (i > -1 && i < employer.length) {
             SQLServerDataSource ds = new SQLServerDataSource();
             ds.setUser("admin");
             ds.setPassword("admin");
@@ -600,17 +659,23 @@ public class DB {
             ds.setTrustServerCertificate(true);
 
             try (Connection con = ds.getConnection();
-                 CallableStatement cstmt = con.prepareCall("DELETE FROM Employer WHERE id = " + employer[i][0])) {
+                 //CallableStatement cstmt = con.prepareCall("DELETE FROM Employer WHERE id = " + employer[i][0])) {
+                 CallableStatement cstmt = con.prepareCall("UPDATE Employer SET fired = 1 WHERE id = " + employer[i][0])) {
                 cstmt.execute();
                 employer = ArrayUtils.remove(employer, i);
             } catch (SQLException e) {
-                e.printStackTrace();
+                if (e.getErrorCode() == 547) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                } else {
+                    System.out.println(e.getErrorCode());
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public void deleteGraveyard(int i) {
-        if (i > -1) {
+        if (i > -1 && i < graveyard.length) {
             SQLServerDataSource ds = new SQLServerDataSource();
             ds.setUser("admin");
             ds.setPassword("admin");
@@ -624,13 +689,18 @@ public class DB {
                 cstmt.execute();
                 graveyard = ArrayUtils.remove(graveyard, i);
             } catch (SQLException e) {
-                e.printStackTrace();
+                if (e.getErrorCode() == 547) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                } else {
+                    System.out.println(e.getErrorCode());
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public void deleteOrdering(int i) {
-        if (i > -1) {
+        if (i > -1 && i < ordering.length) {
             SQLServerDataSource ds = new SQLServerDataSource();
             ds.setUser("admin");
             ds.setPassword("admin");
@@ -640,17 +710,23 @@ public class DB {
             ds.setTrustServerCertificate(true);
 
             try (Connection con = ds.getConnection();
-                 CallableStatement cstmt = con.prepareCall("DELETE FROM Ordering WHERE id = " + ordering[i][0])) {
+                 //CallableStatement cstmt = con.prepareCall("DELETE FROM Ordering WHERE id = " + ordering[i][0])) {
+                 CallableStatement cstmt = con.prepareCall("UPDATE Ordering SET comm = 'Закрыт' WHERE id = " + ordering[i][0])) {
                 cstmt.execute();
                 ordering = ArrayUtils.remove(ordering, i);
             } catch (SQLException e) {
-                e.printStackTrace();
+                if (e.getErrorCode() == 547) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                } else {
+                    System.out.println(e.getErrorCode());
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public void deleteOrderPlace(int i) {
-        if (i > -1) {
+        if (i > -1 && i < orderPlace.length) {
             SQLServerDataSource ds = new SQLServerDataSource();
             ds.setUser("admin");
             ds.setPassword("admin");
@@ -664,13 +740,18 @@ public class DB {
                 cstmt.execute();
                 orderPlace = ArrayUtils.remove(orderPlace, i);
             } catch (SQLException e) {
-                e.printStackTrace();
+                if (e.getErrorCode() == 547) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                } else {
+                    System.out.println(e.getErrorCode());
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public void deleteOrderProducts(int i) {
-        if (i > -1) {
+        if (i > -1 && i < orderProducts.length) {
             SQLServerDataSource ds = new SQLServerDataSource();
             ds.setUser("admin");
             ds.setPassword("admin");
@@ -684,13 +765,18 @@ public class DB {
                 cstmt.execute();
                 orderProducts = ArrayUtils.remove(orderProducts, i);
             } catch (SQLException e) {
-                e.printStackTrace();
+                if (e.getErrorCode() == 547) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                } else {
+                    System.out.println(e.getErrorCode());
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public void deleteOrderServices(int i) {
-        if (i > -1) {
+        if (i > -1 && i < orderServices.length) {
             SQLServerDataSource ds = new SQLServerDataSource();
             ds.setUser("admin");
             ds.setPassword("admin");
@@ -704,13 +790,18 @@ public class DB {
                 cstmt.execute();
                 orderServices = ArrayUtils.remove(orderServices, i);
             } catch (SQLException e) {
-                e.printStackTrace();
+                if (e.getErrorCode() == 547) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                } else {
+                    System.out.println(e.getErrorCode());
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public void deleteOrderTransport(int i) {
-        if (i > -1) {
+        if (i > -1 && i < orderTransport.length) {
             SQLServerDataSource ds = new SQLServerDataSource();
             ds.setUser("admin");
             ds.setPassword("admin");
@@ -724,13 +815,18 @@ public class DB {
                 cstmt.execute();
                 orderTransport = ArrayUtils.remove(orderTransport, i);
             } catch (SQLException e) {
-                e.printStackTrace();
+                if (e.getErrorCode() == 547) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                } else {
+                    System.out.println(e.getErrorCode());
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public void deletePlace(int i) {
-        if (i > -1) {
+        if (i > -1 && i < place.length) {
             SQLServerDataSource ds = new SQLServerDataSource();
             ds.setUser("admin");
             ds.setPassword("admin");
@@ -744,13 +840,18 @@ public class DB {
                 cstmt.execute();
                 place = ArrayUtils.remove(place, i);
             } catch (SQLException e) {
-                e.printStackTrace();
+                if (e.getErrorCode() == 547) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                } else {
+                    System.out.println(e.getErrorCode());
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public void deleteProduct(int i) {
-        if (i > -1) {
+        if (i > -1 && i < product.length) {
             SQLServerDataSource ds = new SQLServerDataSource();
             ds.setUser("admin");
             ds.setPassword("admin");
@@ -760,17 +861,23 @@ public class DB {
             ds.setTrustServerCertificate(true);
 
             try (Connection con = ds.getConnection();
-                 CallableStatement cstmt = con.prepareCall("DELETE FROM Product WHERE id = " + product[i][0])) {
+                 //CallableStatement cstmt = con.prepareCall("DELETE FROM Product WHERE id = " + product[i][0])) {
+                 CallableStatement cstmt = con.prepareCall("UPDATE Product SET stock = 0 WHERE id = " + product[i][0])) {
                 cstmt.execute();
                 product = ArrayUtils.remove(product, i);
             } catch (SQLException e) {
-                e.printStackTrace();
+                if (e.getErrorCode() == 547) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                } else {
+                    System.out.println(e.getErrorCode());
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public void deleteProductCategory(int i) {
-        if (i > -1) {
+        if (i > -1 && i < productsCategory.length) {
             SQLServerDataSource ds = new SQLServerDataSource();
             ds.setUser("admin");
             ds.setPassword("admin");
@@ -784,13 +891,18 @@ public class DB {
                 cstmt.execute();
                 productsCategory = ArrayUtils.remove(productsCategory, i);
             } catch (SQLException e) {
-                e.printStackTrace();
+                if (e.getErrorCode() == 547) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                } else {
+                    System.out.println(e.getErrorCode());
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public void deleteService(int i) {
-        if (i > -1) {
+        if (i > -1 && i < service.length) {
             SQLServerDataSource ds = new SQLServerDataSource();
             ds.setUser("admin");
             ds.setPassword("admin");
@@ -804,13 +916,18 @@ public class DB {
                 cstmt.execute();
                 service = ArrayUtils.remove(service, i);
             } catch (SQLException e) {
-                e.printStackTrace();
+                if (e.getErrorCode() == 547) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                } else {
+                    System.out.println(e.getErrorCode());
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public void deleteTransport(int i) {
-        if (i > -1) {
+        if (i > -1 && i < transport.length) {
             SQLServerDataSource ds = new SQLServerDataSource();
             ds.setUser("admin");
             ds.setPassword("admin");
@@ -824,12 +941,17 @@ public class DB {
                 cstmt.execute();
                 transport = ArrayUtils.remove(transport, i);
             } catch (SQLException e) {
-                e.printStackTrace();
+                if (e.getErrorCode() == 547) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                } else {
+                    System.out.println(e.getErrorCode());
+                    e.printStackTrace();
+                }
             }
         }
     }
 
-    public boolean addClient(String id, String fio, String phone) {
+    public boolean addClient(String fio, String phone) {
         SQLServerDataSource ds = new SQLServerDataSource();
         ds.setUser("admin");
         ds.setPassword("admin");
@@ -840,7 +962,7 @@ public class DB {
 
         try {
             Connection con = ds.getConnection();
-            CallableStatement cstmt = con.prepareCall("INSERT INTO Client VALUES(" + id + ", '" + fio + "', '" + phone + "');");
+            CallableStatement cstmt = con.prepareCall("INSERT INTO Client VALUES('" + fio + "', '" + phone + "');");
             cstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -867,7 +989,7 @@ public class DB {
         return false;
     }
 
-    public boolean addCorpse(String id, String fio, String bd, String dd, String state, String order) {
+    public boolean addCorpse(String fio, String bd, String dd, String state, String order) {
         SQLServerDataSource ds = new SQLServerDataSource();
         ds.setUser("admin");
         ds.setPassword("admin");
@@ -878,7 +1000,7 @@ public class DB {
 
         try {
             Connection con = ds.getConnection();
-            CallableStatement cstmt = con.prepareCall("INSERT INTO Corpse VALUES(" + id + ", '" + fio + "', '" + bd + "', '" + dd + "', " + (state.equals("") ? "NULL" : "'" + state + "'") + ", " + order + ");");
+            CallableStatement cstmt = con.prepareCall("INSERT INTO Corpse VALUES('" + fio + "', '" + bd + "', '" + dd + "', " + (state.equals("") ? "NULL" : "'" + state + "'") + ", " + order + ");");
             cstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -886,7 +1008,7 @@ public class DB {
         return false;
     }
 
-    public boolean addDocument(String id, String employer, String contractor, String order, String link) {
+    public boolean addDocument(String employer, String contractor, String order, String link) {
         SQLServerDataSource ds = new SQLServerDataSource();
         ds.setUser("admin");
         ds.setPassword("admin");
@@ -897,7 +1019,7 @@ public class DB {
 
         try {
             Connection con = ds.getConnection();
-            CallableStatement cstmt = con.prepareCall("INSERT INTO Document VALUES(" + id + ", " + employer + ", " + (contractor.equals("NULL") ? "NULL" : ("'" + contractor + "'")) + ", " + (order.equals("NULL") ? "NULL" : (order)) + ", '" + link + "');");
+            CallableStatement cstmt = con.prepareCall("INSERT INTO Document VALUES(" + employer + ", " + (contractor.equals("NULL") ? "NULL" : ("'" + contractor + "'")) + ", " + (order.equals("NULL") ? "NULL" : (order)) + ", '" + link + "');");
             cstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -905,7 +1027,7 @@ public class DB {
         return false;
     }
 
-    public boolean addEmployer(String id, String fio, String job, String phone, String stage, String login, String password) {
+    public boolean addEmployer(String fio, String job, String phone, String stage, String login, String password) {
         SQLServerDataSource ds = new SQLServerDataSource();
         ds.setUser("admin");
         ds.setPassword("admin");
@@ -916,7 +1038,7 @@ public class DB {
 
         try {
             Connection con = ds.getConnection();
-            CallableStatement cstmt = con.prepareCall("INSERT INTO Employer VALUES(" + id + ", '" + fio + "', '" + fio + "', '" + job + "', '" + phone + "', " + (stage.equals("") ? "NULL" : stage) + ", '" + login + "', '" + password + "');");
+            CallableStatement cstmt = con.prepareCall("INSERT INTO Employer VALUES('" + fio + "', '" + job + "', '" + phone + "', " + (stage.equals("") ? "NULL" : stage) + ", '" + login + "', '" + password + "', 0);");
             cstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -924,7 +1046,7 @@ public class DB {
         return false;
     }
 
-    public boolean addGraveyard(String id, String name, String number, String price, String area, String order) {
+    public boolean addGraveyard(String name, String number, String price, String area, String order) {
         SQLServerDataSource ds = new SQLServerDataSource();
         ds.setUser("admin");
         ds.setPassword("admin");
@@ -935,7 +1057,7 @@ public class DB {
 
         try {
             Connection con = ds.getConnection();
-            CallableStatement cstmt = con.prepareCall("INSERT INTO Graveyard VALUES(" + id + ", '" + name + "', " + number + ", " + price + ", " + area + ", " + (order.equals("NULL") ? "NULL" : (order)) + ");");
+            CallableStatement cstmt = con.prepareCall("INSERT INTO Graveyard VALUES('" + name + "', " + number + ", " + price + ", " + area + ", " + (order.equals("NULL") ? "NULL" : (order)) + ");");
             cstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -943,7 +1065,7 @@ public class DB {
         return false;
     }
 
-    public boolean addOrdering(String id, String client, String employer, String data, String price, String com) {
+    public boolean addOrdering(String client, String employer, String data, String price, String com) {
         SQLServerDataSource ds = new SQLServerDataSource();
         ds.setUser("admin");
         ds.setPassword("admin");
@@ -954,7 +1076,7 @@ public class DB {
 
         try {
             Connection con = ds.getConnection();
-            CallableStatement cstmt = con.prepareCall("INSERT INTO Ordering VALUES(" + id + ", " + client + ", " + employer + ", '" + data + "', " + price + ", " + (com.equals("NULL") ? "NULL" : ("'" + com + "'")) + ");");
+            CallableStatement cstmt = con.prepareCall("INSERT INTO Ordering VALUES(" + client + ", " + employer + ", '" + data + "', " + price + ", " + (com.equals("NULL") ? "NULL" : ("'" + com + "'")) + ");");
             cstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1038,7 +1160,7 @@ public class DB {
         return false;
     }
 
-    public boolean addPlace(String id, String name, String adress) {
+    public boolean addPlace(String name, String adress) {
         SQLServerDataSource ds = new SQLServerDataSource();
         ds.setUser("admin");
         ds.setPassword("admin");
@@ -1049,7 +1171,7 @@ public class DB {
 
         try {
             Connection con = ds.getConnection();
-            CallableStatement cstmt = con.prepareCall("INSERT INTO Place VALUES(" + id + ", '" + name + "', " + (adress.equals("") ? "NULL" : "'" + adress + "'") + ");");
+            CallableStatement cstmt = con.prepareCall("INSERT INTO Place VALUES('" + name + "', " + (adress.equals("") ? "NULL" : "'" + adress + "'") + ");");
             cstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1057,7 +1179,7 @@ public class DB {
         return false;
     }
 
-    public boolean addProduct(String id, String name, String category, String price, String stock) {
+    public boolean addProduct(String name, String category, String price, String stock) {
         SQLServerDataSource ds = new SQLServerDataSource();
         ds.setUser("admin");
         ds.setPassword("admin");
@@ -1068,7 +1190,7 @@ public class DB {
 
         try {
             Connection con = ds.getConnection();
-            CallableStatement cstmt = con.prepareCall("INSERT INTO Product VALUES(" + id + ", '" + name + "', " + category + ", " + price + ", " + (stock.equals("") ? "NULL" : "'" + stock + "'") + ");");
+            CallableStatement cstmt = con.prepareCall("INSERT INTO Product VALUES('" + name + "', " + category + ", " + price + ", " + (stock.equals("") ? "NULL" : "'" + stock + "'") + ");");
             cstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1076,7 +1198,7 @@ public class DB {
         return false;
     }
 
-    public boolean addProductsCategory(String id, String name) {
+    public boolean addProductsCategory(String name) {
         SQLServerDataSource ds = new SQLServerDataSource();
         ds.setUser("admin");
         ds.setPassword("admin");
@@ -1087,7 +1209,7 @@ public class DB {
 
         try {
             Connection con = ds.getConnection();
-            CallableStatement cstmt = con.prepareCall("INSERT INTO ProductsCategory VALUES(" + id + ", '" + name + "');");
+            CallableStatement cstmt = con.prepareCall("INSERT INTO ProductsCategory VALUES('" + name + "');");
             cstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1095,7 +1217,7 @@ public class DB {
         return false;
     }
 
-    public boolean addService(String id, String name, String price) {
+    public boolean addService(String name, String price) {
         SQLServerDataSource ds = new SQLServerDataSource();
         ds.setUser("admin");
         ds.setPassword("admin");
@@ -1106,7 +1228,7 @@ public class DB {
 
         try {
             Connection con = ds.getConnection();
-            CallableStatement cstmt = con.prepareCall("INSERT INTO Service VALUES(" + id + ", '" + name + "', " + price + ");");
+            CallableStatement cstmt = con.prepareCall("INSERT INTO Service VALUES('" + name + "', " + price + ");");
             cstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1114,7 +1236,7 @@ public class DB {
         return false;
     }
 
-    public boolean addTransport(String id, String name, String capacity) {
+    public boolean addTransport(String name, String capacity) {
         SQLServerDataSource ds = new SQLServerDataSource();
         ds.setUser("admin");
         ds.setPassword("admin");
@@ -1125,14 +1247,15 @@ public class DB {
 
         try {
             Connection con = ds.getConnection();
-            CallableStatement cstmt = con.prepareCall("INSERT INTO Transport VALUES(" + id + ", '" + name + "', " + (capacity.equals("") ? "NULL" : capacity) + ");");
+            CallableStatement cstmt = con.prepareCall("INSERT INTO Transport VALUES('" + name + "', " + (capacity.equals("") ? "NULL" : capacity) + ");");
             cstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
-    public boolean updateClient(int r) {
+
+    public boolean updateClient(String id, String fio, String phone) {
         SQLServerDataSource ds = new SQLServerDataSource();
         ds.setUser("admin");
         ds.setPassword("admin");
@@ -1143,14 +1266,15 @@ public class DB {
 
         try {
             Connection con = ds.getConnection();
-            CallableStatement cstmt = con.prepareCall("UPDATE Client SET name = '" + client[r][1] + "', phone = '" + client[r][2] +"' WHERE id = " + client[r][0]);
+            CallableStatement cstmt = con.prepareCall("UPDATE Client SET name = '" + fio + "', phone = '" + phone + "' WHERE id = " + id + ";");
             cstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
-    public boolean updateContractor(int r, int c, Object data) {
+
+    public boolean updateContractor(String name, String contact, String desc) {
         SQLServerDataSource ds = new SQLServerDataSource();
         ds.setUser("admin");
         ds.setPassword("admin");
@@ -1161,14 +1285,15 @@ public class DB {
 
         try {
             Connection con = ds.getConnection();
-            CallableStatement cstmt = con.prepareCall("UPDATE Contractor SET name = '" + contractor[r][0] + "', contact = '" + contractor[r][1] + "', classification = '" + contractor[r][2] +"' WHERE name = '" + contractor[r][0] + "'");
-            //cstmt.execute();
+            CallableStatement cstmt = con.prepareCall("UPDATE Contractor SET contact = '" + contact + "', classification = " + (desc.equals("") ? "NULL" : "'" + desc + "'") + " WHERE name = '" + name + "';");
+            cstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
-    public boolean updateCorpse(int r, int c, Object data) {
+
+    public boolean updateCorpse(String id, String fio, String bd, String dd, String state, String order) {
         SQLServerDataSource ds = new SQLServerDataSource();
         ds.setUser("admin");
         ds.setPassword("admin");
@@ -1179,14 +1304,15 @@ public class DB {
 
         try {
             Connection con = ds.getConnection();
-            CallableStatement cstmt = con.prepareCall("UPDATE Corpse SET name = '" + corpse[r][1] + "', bith_date = '" + corpse[r][2] + "', death_date = '" + corpse[r][3] +"', stage = '" + corpse[r][4] +"', order_id = " + corpse[r][5] + " WHERE id = " + corpse[r][0] + "");
-            //cstmt.execute();
+            CallableStatement cstmt = con.prepareCall("UPDATE Corpse SET name = '" + fio + "', birth_date ='" + bd + "', death_dete = '" + dd + "', stage = " + (state.equals("") ? "NULL" : "'" + state + "'") + ", order_id = " + order + " WHERE id = " + id + ";");
+            cstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
-    public boolean updateDocument(int r, int c, Object data) {
+
+    public boolean updateDocument(String id, String employer, String contractor, String order, String link) {
         SQLServerDataSource ds = new SQLServerDataSource();
         ds.setUser("admin");
         ds.setPassword("admin");
@@ -1197,8 +1323,236 @@ public class DB {
 
         try {
             Connection con = ds.getConnection();
-            CallableStatement cstmt = con.prepareCall("UPDATE Corpse SET name = '" + corpse[r][1] + "', bith_date = '" + corpse[r][2] + "', death_date = '" + corpse[r][3] +"', stage = '" + corpse[r][4] +"', order_id = " + corpse[r][5] + " WHERE id = " + corpse[r][0] + "");
-            //cstmt.execute();
+            CallableStatement cstmt = con.prepareCall("UPDATE Document SET employer_id = " + employer + ", contractor = " + (contractor.equals("NULL") ? "NULL" : ("'" + contractor + "'")) + ", order_id = " + (order.equals("NULL") ? "NULL" : (order)) + ", link = '" + link + "' WHERE id = " + id + ";");
+            cstmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateEmployer(String id, String fio, String job, String phone, String stage, String login, String password, Boolean fired) {
+        SQLServerDataSource ds = new SQLServerDataSource();
+        ds.setUser("admin");
+        ds.setPassword("admin");
+        ds.setServerName("localhost");
+        ds.setPortNumber(Integer.parseInt("1433"));
+        ds.setDatabaseName("Bureau");
+        ds.setTrustServerCertificate(true);
+
+        try {
+            Connection con = ds.getConnection();
+            CallableStatement cstmt = con.prepareCall("UPDATE Employer SET name = '" + fio + "', job = '" + job + "', phone = '" + phone + "', stage = " + (stage.equals("") ? "NULL" : stage) + ", login_user = " + (login.equals("NULL") ? "NULL" : ("'" + login + "'")) + ", pass = " + (password.equals("NULL") ? "NULL" : ("'" + password + "'")) + ", fired = " + (fired ? "1" : "0") + " WHERE id = " + id + ";");
+            cstmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateGraveyard(String id, String name, String number, String price, String area, String order) {
+        SQLServerDataSource ds = new SQLServerDataSource();
+        ds.setUser("admin");
+        ds.setPassword("admin");
+        ds.setServerName("localhost");
+        ds.setPortNumber(Integer.parseInt("1433"));
+        ds.setDatabaseName("Bureau");
+        ds.setTrustServerCertificate(true);
+
+        try {
+            Connection con = ds.getConnection();
+            CallableStatement cstmt = con.prepareCall("UPDATE Graveyard SET name = '" + name + "', num = " + number + ", price = " + price + ", area = " + area + ", order_id =" + (order.equals("NULL") ? "NULL" : (order)) + " WHERE id = " + id + ";");
+            cstmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateOrdering(String id, String client, String employer, String data, String price, String com) {
+        SQLServerDataSource ds = new SQLServerDataSource();
+        ds.setUser("admin");
+        ds.setPassword("admin");
+        ds.setServerName("localhost");
+        ds.setPortNumber(Integer.parseInt("1433"));
+        ds.setDatabaseName("Bureau");
+        ds.setTrustServerCertificate(true);
+
+        try {
+            Connection con = ds.getConnection();
+            CallableStatement cstmt = con.prepareCall("UPDATE Ordering SET client_id = " + client + ", employer_id = " + employer + ", order_date = '" + data + "', price = " + price + ", comm = " + (com.equals("NULL") ? "NULL" : ("'" + com + "'")) + " WHERE id = " + id + ";");
+            cstmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateOrderPlace(String order, String place, String old_order, String old_place) {
+        SQLServerDataSource ds = new SQLServerDataSource();
+        ds.setUser("admin");
+        ds.setPassword("admin");
+        ds.setServerName("localhost");
+        ds.setPortNumber(Integer.parseInt("1433"));
+        ds.setDatabaseName("Bureau");
+        ds.setTrustServerCertificate(true);
+
+        try {
+            Connection con = ds.getConnection();
+            CallableStatement cstmt = con.prepareCall("UPDATE OrderPlace SET order_id = " + order + ", place_id = " + place + " WHERE order_id = " + old_order + " AND place_id = " + old_place + ";");
+            cstmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateOrderProducts(String order, String product, String amount, String old_order, String old_product) {
+        SQLServerDataSource ds = new SQLServerDataSource();
+        ds.setUser("admin");
+        ds.setPassword("admin");
+        ds.setServerName("localhost");
+        ds.setPortNumber(Integer.parseInt("1433"));
+        ds.setDatabaseName("Bureau");
+        ds.setTrustServerCertificate(true);
+
+        try {
+            Connection con = ds.getConnection();
+            CallableStatement cstmt = con.prepareCall("UPDATE OrderProducts SET order_id = " + order + ", product_id = " + product + ", amount = " + amount + " WHERE order_id = " + old_order + " AND product_id = " + old_product + ";");
+            cstmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateOrderServices(String order, String service, String old_order, String old_service) {
+        SQLServerDataSource ds = new SQLServerDataSource();
+        ds.setUser("admin");
+        ds.setPassword("admin");
+        ds.setServerName("localhost");
+        ds.setPortNumber(Integer.parseInt("1433"));
+        ds.setDatabaseName("Bureau");
+        ds.setTrustServerCertificate(true);
+
+        try {
+            Connection con = ds.getConnection();
+            CallableStatement cstmt = con.prepareCall("UPDATE OrderServices SET order_id = " + order + ", service_id = " + service + " WHERE order_id = " + old_order + " AND service_id = " + old_service + ";");
+            cstmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateOrderTransport(String order, String transport, String old_order, String old_transport) {
+        SQLServerDataSource ds = new SQLServerDataSource();
+        ds.setUser("admin");
+        ds.setPassword("admin");
+        ds.setServerName("localhost");
+        ds.setPortNumber(Integer.parseInt("1433"));
+        ds.setDatabaseName("Bureau");
+        ds.setTrustServerCertificate(true);
+
+        try {
+            Connection con = ds.getConnection();
+            CallableStatement cstmt = con.prepareCall("UPDATE OrderTransport SET order_id = " + order + ", transport_id = " + transport + " WHERE order_id = " + old_order + " AND transport_id = " + old_transport + ";");
+            cstmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updatePlace(String id, String name, String adress) {
+        SQLServerDataSource ds = new SQLServerDataSource();
+        ds.setUser("admin");
+        ds.setPassword("admin");
+        ds.setServerName("localhost");
+        ds.setPortNumber(Integer.parseInt("1433"));
+        ds.setDatabaseName("Bureau");
+        ds.setTrustServerCertificate(true);
+
+        try {
+            Connection con = ds.getConnection();
+            CallableStatement cstmt = con.prepareCall("UPDATE Place SET name = '" + name + "', adress = " + (adress.equals("") ? "NULL" : "'" + adress + "'") + " WHERE id = " + id + ";");
+            cstmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateProduct(String id, String name, String category, String price, String stock) {
+        SQLServerDataSource ds = new SQLServerDataSource();
+        ds.setUser("admin");
+        ds.setPassword("admin");
+        ds.setServerName("localhost");
+        ds.setPortNumber(Integer.parseInt("1433"));
+        ds.setDatabaseName("Bureau");
+        ds.setTrustServerCertificate(true);
+
+        try {
+            Connection con = ds.getConnection();
+            CallableStatement cstmt = con.prepareCall("UPDATE Product SET name = '" + name + "', categorynumber = " + category + ", price = " + price + ", stock = " + (stock.equals("") ? "NULL" : "'" + stock + "'") + " WHERE id = " + id + ";");
+            cstmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateProductsCategory(String id, String name) {
+        SQLServerDataSource ds = new SQLServerDataSource();
+        ds.setUser("admin");
+        ds.setPassword("admin");
+        ds.setServerName("localhost");
+        ds.setPortNumber(Integer.parseInt("1433"));
+        ds.setDatabaseName("Bureau");
+        ds.setTrustServerCertificate(true);
+
+        try {
+            Connection con = ds.getConnection();
+            CallableStatement cstmt = con.prepareCall("UPDATE ProductsCategory SET name = '" + name + "' WHERE id = " + id + ";");
+            cstmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateService(String id, String name, String price) {
+        SQLServerDataSource ds = new SQLServerDataSource();
+        ds.setUser("admin");
+        ds.setPassword("admin");
+        ds.setServerName("localhost");
+        ds.setPortNumber(Integer.parseInt("1433"));
+        ds.setDatabaseName("Bureau");
+        ds.setTrustServerCertificate(true);
+
+        try {
+            Connection con = ds.getConnection();
+            CallableStatement cstmt = con.prepareCall("UPDATE Service SET name = '" + name + "', price = " + price + " WHERE id = " + id + ";");
+            cstmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateTransport(String id, String name, String capacity) {
+        SQLServerDataSource ds = new SQLServerDataSource();
+        ds.setUser("admin");
+        ds.setPassword("admin");
+        ds.setServerName("localhost");
+        ds.setPortNumber(Integer.parseInt("1433"));
+        ds.setDatabaseName("Bureau");
+        ds.setTrustServerCertificate(true);
+
+        try {
+            Connection con = ds.getConnection();
+            CallableStatement cstmt = con.prepareCall("UPDATE Transport SET model = '" + name + "', capacity = " + (capacity.equals("") ? "NULL" : capacity) + " WHERE id = " + id + ";");
+            cstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }

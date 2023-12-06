@@ -1,7 +1,7 @@
 import javax.swing.table.AbstractTableModel;
 
 class MyTableModel extends AbstractTableModel {
-    private final boolean DEBUG = true;
+    private final boolean DEBUG = false;
     private int editCall = 0;
     private String[] columnNames = {};
     private Object[][] data = {};

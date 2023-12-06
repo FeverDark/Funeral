@@ -8,7 +8,6 @@ import java.time.LocalDate;
 public class Corpse extends JFrame {
     private JPanel mainPanel;
     private JButton addButton;
-    private JTextField textField1;
     private JTextField textField2;
     private JTextField textField3;
     private JComboBox comboBox1;
@@ -30,15 +29,9 @@ public class Corpse extends JFrame {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (textField1.getText().isEmpty() || textField2.getText().isEmpty()) {
+                if (textField2.getText().isEmpty() || datePicker1.getDate() == null || datePicker2.getDate() == null) {
                     JOptionPane.showMessageDialog(new JFrame(), "Основные поля должны быть заполненными.");
                     return;
-                }
-                for (int i = 0; i < data.getCorpse().length; ++i) {
-                    if (textField1.getText().equals(data.getCorpse()[i][0].toString())) {
-                        JOptionPane.showMessageDialog(new JFrame(), "ID должен быть уникальным.");
-                        return;
-                    }
                 }
                 if (datePicker1.getDate().isAfter(LocalDate.now())) {
                     JOptionPane.showMessageDialog(new JFrame(), "Дата не должна превышать текущую.");
@@ -48,13 +41,7 @@ public class Corpse extends JFrame {
                     JOptionPane.showMessageDialog(new JFrame(), "Дата не должна превышать текущую.");
                     return;
                 }
-                try {
-                    Integer.parseInt(textField1.getText());
-                } catch (NumberFormatException c) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Неправильно введен ID.");
-                    return;
-                }
-                data.addCorpse(textField1.getText(), textField2.getText(), datePicker1.toString(), datePicker2.toString(), textField3.getText(), ((ComboItem) comboBox1.getSelectedItem()).getValue());
+                data.addCorpse(textField2.getText(), datePicker1.toString(), datePicker2.toString(), textField3.getText(), ((ComboItem) comboBox1.getSelectedItem()).getValue());
                 Exit();
                 control.setUpdate(true);
             }

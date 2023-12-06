@@ -37,7 +37,13 @@ public class OrderProducts extends JFrame {
                         }
                     }
                 }
-                data.addOrderProducts(((ComboItem) comboBox1.getSelectedItem()).getValue(), ((ComboItem) comboBox2.getSelectedItem()).getValue(), textField1.getText());
+                try {
+                    Integer.parseInt(textField1.getText());
+                } catch (NumberFormatException c) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Неправильно введено количество.");
+                    return;
+                }
+                data.addOrderProducts(((ComboItem) comboBox2.getSelectedItem()).getValue(), ((ComboItem) comboBox1.getSelectedItem()).getValue(), textField1.getText());
                 Exit();
                 control.setUpdate(true);
             }

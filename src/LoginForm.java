@@ -20,9 +20,10 @@ public class LoginForm extends JFrame {
         enterButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                boolean login = data.login(loginField.getText(), passwordField.getText());
-                if (login) {
-                    data.isLogged = true;
+                boolean[] log = data.login(loginField.getText(), passwordField.getText());
+                if (log[0]) {
+                    data.isLogged = log[0];
+                    data.superUser = log[1];
                     control.setState(1);
                 }
             }

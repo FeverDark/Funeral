@@ -18,6 +18,10 @@ public class Contractor extends JFrame {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (!data.superUser) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Только руководство может добавлять подрядчиков.");
+                    Exit();
+                }
                 if (textField1.getText().isEmpty() || textField2.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(new JFrame(), "Поля должны быть заполненными.");
                     return;

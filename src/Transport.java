@@ -4,7 +4,6 @@ import java.awt.event.ActionListener;
 
 public class Transport extends JFrame {
     private JPanel mainPanel;
-    private JTextField textField1;
     private JTextField textField2;
     private JTextField textField3;
     private JButton button1;
@@ -18,20 +17,13 @@ public class Transport extends JFrame {
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (textField1.getText().isEmpty() || textField2.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Основные поля должны быть заполненными.");
+                if (!data.superUser) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Только руководство может добавлять транспорт.");
+                    Exit();
                     return;
                 }
-                for (int i = 0; i < data.getTransport().length; ++i) {
-                    if (textField1.getText().equals(data.getTransport()[i][0].toString())) {
-                        JOptionPane.showMessageDialog(new JFrame(), "ID должен быть уникальным.");
-                        return;
-                    }
-                }
-                try {
-                    Integer.parseInt(textField1.getText());
-                } catch (NumberFormatException c) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Неправильно введен ID.");
+                if (textField2.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Основные поля должны быть заполненными.");
                     return;
                 }
                 try {
@@ -40,7 +32,7 @@ public class Transport extends JFrame {
                     JOptionPane.showMessageDialog(new JFrame(), "Неправильно введено количество мест.");
                     return;
                 }
-                data.addTransport(textField1.getText(), textField2.getText(), textField3.getText());
+                data.addTransport(textField2.getText(), textField3.getText());
                 Exit();
                 control.setUpdate(true);
             }
