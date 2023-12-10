@@ -13,12 +13,8 @@ public class Item {
         this.type = type;
     }
 
-    ;
-
     public void updateDb(int id) {
     }
-
-    ;
 
     public int getPrice() {
         return 0;

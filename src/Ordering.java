@@ -21,11 +21,11 @@ public class Ordering extends JFrame {
         this.pack();
 
         textField1.setText("");
-        for (int i = 0; i < data.getClient().length; ++i) {
-            comboBox1.addItem(new ComboItem(data.getClient()[i][1].toString(), data.getClient()[i][0].toString()));
+        for (int i = 0; i < data.client.length; ++i) {
+            comboBox1.addItem(new ComboItem(data.client[i][1].toString(), data.client[i][0].toString()));
         }
-        for (int i = 0; i < data.getEmployer().length; ++i) {
-            comboBox2.addItem(new ComboItem(data.getEmployer()[i][1].toString(), data.getEmployer()[i][0].toString()));
+        for (int i = 0; i < data.employer.length; ++i) {
+            comboBox2.addItem(new ComboItem(data.employer[i][1].toString(), data.employer[i][0].toString()));
         }
         datePicker.setDateToToday();
         addButton.addActionListener(new ActionListener() {

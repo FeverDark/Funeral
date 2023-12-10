@@ -10,196 +10,48 @@ public class DB {
     public boolean superUser = false;
     public int employerId = -1;
     public String employerName = null;
-    public String[] clientNames = {"id", "name", "phone"};
-    public String[] contractorNames = {"name", "contact", "classification"};
-    public String[] corpseNames = {"id", "name", "birth_date", "death_dete", "stage", "order_id"};
-    public String[] documentNames = {"id", "employer_id", "contractor", "order_id", "link"};
-    public String[] employerNames = {"id", "name", "job", "phone", "stage", "login_user", "pass", "fired"};
-    public String[] graveyardNames = {"id", "name", "num", "price", "area", "order_id"};
-    public String[] orderingNames = {"id", "client_id", "employer_id", "order_date", "price", "comm"};
-    public String[] orderPlaceNames = {"order_id", "place_id"};
-    public String[] orderProductsNames = {"order_id", "product_id", "amount"};
-    public String[] orderServicesNames = {"order_id", "service_id"};
-    public String[] orderTransportNames = {"order_id", "transport_id"};
-    public String[] placeNames = {"id", "name", "adress"};
-    public String[] productNames = {"id", "name", "categorynumber", "price", "stock"};
-    public String[] productsCategoryNames = {"id", "name"};
-    public String[] serviceNames = {"id", "name", "price"};
-    public String[] transportNames = {"id", "model", "capacity"};
-    Object[][] client = {};
-    Object[][] contractor = {};
-    Object[][] corpse = {};
-    Object[][] document = {};
-    Object[][] documentConverted = {};
-    Object[][] employer = {};
-    Object[][] graveyard = {};
-    Object[][] ordering = {};
-    Object[][] orderingConverted = {};
-    Object[][] orderPlace = {};
-    Object[][] orderPlaceConverted = {};
-    Object[][] orderProducts = {};
-    Object[][] orderProductsConverted = {};
-    Object[][] orderServices = {};
-    Object[][] orderServicesConverted = {};
-    Object[][] orderTransport = {};
-    Object[][] orderTransportConverted = {};
-    Object[][] place = {};
-    Object[][] product = {};
-    Object[][] productConverted;
-    Object[][] productsCategory = {};
-    Object[][] service = {};
-    Object[][] transport = {};
+    public String[] clientNames = {"ID", "ФИО", "Телефон"};
+    public String[] contractorNames = {"Название", "Контакт", "Специализация"};
+    public String[] corpseNames = {"ID", "ФИО", "Дата рождения", "Дата смерти", "Состояние", "Заказ"};
+    public String[] documentNames = {"ID", "Сотрудник", "Подрядчик", "Заказ", "Ссылка"};
+    public String[] employerNames = {"ID", "ФИО", "Должность", "Телефон", "Стаж", "Логин", "Пароль", "Уволен"};
+    public String[] graveyardNames = {"ID", "Название", "Номер", "Цена", "Площадь", "Заказ"};
+    public String[] orderingNames = {"ID", "Клиент", "Сотрудник", "Дата", "Цена", "Комментарий"};
+    public String[] orderPlaceNames = {"Заказ", "Место проведения"};
+    public String[] orderProductsNames = {"Заказ", "Товар", "Количество"};
+    public String[] orderServicesNames = {"Заказ", "Услуга"};
+    public String[] orderTransportNames = {"Заказ", "Транспорт"};
+    public String[] placeNames = {"ID", "Название", "Адрес"};
+    public String[] productNames = {"ID", "Наименование", "categorynumber", "Цена", "Остаток на складе"};
+    public String[] productsCategoryNames = {"ID", "Наименование"};
+    public String[] serviceNames = {"ID", "Наименование", "Цена"};
+    public String[] transportNames = {"ID", "Модель", "Количество мест"};
+    public Object[][] client = {};
+    public Object[][] contractor = {};
+    public Object[][] corpse = {};
+    public Object[][] document = {};
+    public Object[][] documentConverted = {};
+    public Object[][] employer = {};
+    public Object[][] graveyard = {};
+    public Object[][] ordering = {};
+    public Object[][] orderingConverted = {};
+    public Object[][] orderPlace = {};
+    public Object[][] orderPlaceConverted = {};
+    public Object[][] orderProducts = {};
+    public Object[][] orderProductsConverted = {};
+    public Object[][] orderServices = {};
+    public Object[][] orderServicesConverted = {};
+    public Object[][] orderTransport = {};
+    public Object[][] orderTransportConverted = {};
+    public Object[][] place = {};
+    public Object[][] product = {};
+    public Object[][] productConverted;
+    public Object[][] productsCategory = {};
+    public Object[][] service = {};
+    public Object[][] transport = {};
 
     public DB() {
 
-    }
-
-    public Object getClient(int x, int y) {
-        return client[x][y];
-    }
-
-    public Object[][] getClient() {
-        return client;
-    }
-
-    public Object getContractor(int x, int y) {
-        return contractor[x][y];
-    }
-
-    public Object[][] getContractor() {
-        return contractor;
-    }
-
-    public Object getCorpse(int x, int y) {
-        return corpse[x][y];
-    }
-
-    public Object[][] getCorpse() {
-        return corpse;
-    }
-
-    public Object getDocument(int x, int y) {
-        return document[x][y];
-    }
-
-    public Object[][] getDocument() {
-        return document;
-    }
-
-    public Object getEmployer(int x, int y) {
-        return employer[x][y];
-    }
-
-    public Object[][] getEmployer() {
-        return employer;
-    }
-
-    public Object getGraveyard(int x, int y) {
-        return graveyard[x][y];
-    }
-
-    public Object[][] getGraveyard() {
-        return graveyard;
-    }
-
-    public Object getOrdering(int x, int y) {
-        return ordering[x][y];
-    }
-
-    public Object[][] getOrdering() {
-        return ordering;
-    }
-
-    public Object getOrderPlace(int x, int y) {
-        return orderPlace[x][y];
-    }
-
-    public Object[][] getOrderPlace() {
-        return orderPlace;
-    }
-
-    public Object[][] getOrderPlaceConverted() {
-        return orderPlaceConverted;
-    }
-
-    public Object getOrderPProducts(int x, int y) {
-        return orderProducts[x][y];
-    }
-
-    public Object[][] getOrderProducts() {
-        return orderProducts;
-    }
-
-    public Object[][] getOrderProductsConverted() {
-        return orderProductsConverted;
-    }
-
-    public Object getOrderServices(int x, int y) {
-        return orderServices[x][y];
-    }
-
-    public Object[][] getOrderServices() {
-        return orderServices;
-    }
-
-    public Object[][] getOrderServicesConverted() {
-        return orderServicesConverted;
-    }
-
-    public Object getOrderTransport(int x, int y) {
-        return orderTransport[x][y];
-    }
-
-    public Object[][] getOrderTransport() {
-        return orderTransport;
-    }
-
-    public Object[][] getOrderTransportConverted() {
-        return orderTransportConverted;
-    }
-
-    public Object getPlace(int x, int y) {
-        return place[x][y];
-    }
-
-    public Object[][] getPlace() {
-        return place;
-    }
-
-    public Object getProduct(int x, int y) {
-        return product[x][y];
-    }
-
-    public Object[][] getProduct() {
-        return product;
-    }
-
-    public Object[][] getProductConverted() {
-        return productConverted;
-    }
-
-    public Object getProductsCategory(int x, int y) {
-        return productsCategory[x][y];
-    }
-
-    public Object[][] getProductsCategory() {
-        return productsCategory;
-    }
-
-    public Object getService(int x, int y) {
-        return service[x][y];
-    }
-
-    public Object[][] getService() {
-        return service;
-    }
-
-    public Object getTransport(int x, int y) {
-        return transport[x][y];
-    }
-
-    public Object[][] getTransport() {
-        return transport;
     }
 
     public void getData() {
@@ -562,7 +414,7 @@ public class DB {
                 client = ArrayUtils.remove(client, i);
             } catch (SQLException e) {
                 if (e.getErrorCode() == 547) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить клиента, который уже совершил заказ.");
                 } else {
                     System.out.println(e.getErrorCode());
                     e.printStackTrace();
@@ -588,7 +440,7 @@ public class DB {
                 contractor = ArrayUtils.remove(contractor, i);
             } catch (SQLException e) {
                 if (e.getErrorCode() == 547) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить компанию, который выполнял работу по подряду.");
                 } else {
                     System.out.println(e.getErrorCode());
                     e.printStackTrace();
@@ -614,7 +466,7 @@ public class DB {
                 corpse = ArrayUtils.remove(corpse, i);
             } catch (SQLException e) {
                 if (e.getErrorCode() == 547) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить тело, которое было добавлено в заказ.");
                 } else {
                     System.out.println(e.getErrorCode());
                     e.printStackTrace();
@@ -639,7 +491,7 @@ public class DB {
                 document = ArrayUtils.remove(document, i);
             } catch (SQLException e) {
                 if (e.getErrorCode() == 547) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить документ, на который идет ссылка.");
                 } else {
                     System.out.println(e.getErrorCode());
                     e.printStackTrace();
@@ -665,7 +517,7 @@ public class DB {
                 employer = ArrayUtils.remove(employer, i);
             } catch (SQLException e) {
                 if (e.getErrorCode() == 547) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить сотрудника, который уже работал по заказу.");
                 } else {
                     System.out.println(e.getErrorCode());
                     e.printStackTrace();
@@ -690,7 +542,7 @@ public class DB {
                 graveyard = ArrayUtils.remove(graveyard, i);
             } catch (SQLException e) {
                 if (e.getErrorCode() == 547) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить место на кладбище, которое используется.");
                 } else {
                     System.out.println(e.getErrorCode());
                     e.printStackTrace();
@@ -709,14 +561,19 @@ public class DB {
             ds.setDatabaseName("Bureau");
             ds.setTrustServerCertificate(true);
 
-            try (Connection con = ds.getConnection();
+            try (Connection con = ds.getConnection()) {
                  //CallableStatement cstmt = con.prepareCall("DELETE FROM Ordering WHERE id = " + ordering[i][0])) {
-                 CallableStatement cstmt = con.prepareCall("UPDATE Ordering SET comm = 'Закрыт' WHERE id = " + ordering[i][0])) {
+                CallableStatement cstmt;
+                if(ordering[i][4].toString().equals("0")){
+                    cstmt = con.prepareCall("DELETE FROM Ordering WHERE id = " + ordering[i][0]);
+                } else {
+                    cstmt = con.prepareCall("UPDATE Ordering SET comm = 'Закрыт' WHERE id = " + ordering[i][0]);
+                }
                 cstmt.execute();
                 ordering = ArrayUtils.remove(ordering, i);
             } catch (SQLException e) {
                 if (e.getErrorCode() == 547) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить заказ, в котором есть товар.");
                 } else {
                     System.out.println(e.getErrorCode());
                     e.printStackTrace();
@@ -841,7 +698,7 @@ public class DB {
                 place = ArrayUtils.remove(place, i);
             } catch (SQLException e) {
                 if (e.getErrorCode() == 547) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно место, которое привязано к заказу.");
                 } else {
                     System.out.println(e.getErrorCode());
                     e.printStackTrace();
@@ -867,7 +724,7 @@ public class DB {
                 product = ArrayUtils.remove(product, i);
             } catch (SQLException e) {
                 if (e.getErrorCode() == 547) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить товар, который используется в заказах.");
                 } else {
                     System.out.println(e.getErrorCode());
                     e.printStackTrace();
@@ -892,7 +749,7 @@ public class DB {
                 productsCategory = ArrayUtils.remove(productsCategory, i);
             } catch (SQLException e) {
                 if (e.getErrorCode() == 547) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить категорию товаров, к которой привязан товар.");
                 } else {
                     System.out.println(e.getErrorCode());
                     e.printStackTrace();
@@ -917,7 +774,7 @@ public class DB {
                 service = ArrayUtils.remove(service, i);
             } catch (SQLException e) {
                 if (e.getErrorCode() == 547) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить услугу, которая используется по заказу.");
                 } else {
                     System.out.println(e.getErrorCode());
                     e.printStackTrace();
@@ -942,7 +799,7 @@ public class DB {
                 transport = ArrayUtils.remove(transport, i);
             } catch (SQLException e) {
                 if (e.getErrorCode() == 547) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить первичный ключ, от которого идут наследования.");
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно удалить транспорт, который используется по заказу.");
                 } else {
                     System.out.println(e.getErrorCode());
                     e.printStackTrace();
@@ -952,6 +809,7 @@ public class DB {
     }
 
     public boolean addClient(String fio, String phone) {
+        int clientId = -1;
         SQLServerDataSource ds = new SQLServerDataSource();
         ds.setUser("admin");
         ds.setPassword("admin");
@@ -960,12 +818,20 @@ public class DB {
         ds.setDatabaseName("Bureau");
         ds.setTrustServerCertificate(true);
 
-        try {
-            Connection con = ds.getConnection();
-            CallableStatement cstmt = con.prepareCall("INSERT INTO Client VALUES('" + fio + "', '" + phone + "');");
-            cstmt.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        for (int i = 0; i < client.length; ++i) {
+            if (client[i][1].toString().equals(fio) && client[i][2].toString().equals(phone)) {
+                clientId = Integer.parseInt(client[i][0].toString());
+                break;
+            }
+        }
+        if (clientId == -1) {
+            try {
+                Connection con = ds.getConnection();
+                CallableStatement cstmt = con.prepareCall("INSERT INTO Client VALUES('" + fio + "', '" + phone + "');");
+                cstmt.execute();
+            } catch (SQLException c) {
+                c.printStackTrace();
+            }
         }
         return false;
     }

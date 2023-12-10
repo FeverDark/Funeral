@@ -13,18 +13,18 @@ public class OrderTransport extends JFrame {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setContentPane(mainPanel);
         this.pack();
-        for (int i = 0; i < data.getOrdering().length; ++i) {
-            comboBox1.addItem(new ComboItem(data.getOrdering()[i][0].toString(), data.getOrdering()[i][0].toString()));
+        for (int i = 0; i < data.ordering.length; ++i) {
+            comboBox1.addItem(new ComboItem(data.ordering[i][0].toString(), data.ordering[i][0].toString()));
         }
-        for (int i = 0; i < data.getTransport().length; ++i) {
-            comboBox2.addItem(new ComboItem(data.getTransport()[i][1].toString(), data.getTransport()[i][0].toString()));
+        for (int i = 0; i < data.transport.length; ++i) {
+            comboBox2.addItem(new ComboItem(data.transport[i][1].toString(), data.transport[i][0].toString()));
         }
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (int i = 0; i != data.getOrderTransport().length; ++i) {
-                    if (data.getOrderTransport()[i][0].toString().equals(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                        if (data.getOrderTransport()[i][1].toString().equals(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
+                for (int i = 0; i != data.orderTransport.length; ++i) {
+                    if (data.orderTransport[i][0].toString().equals(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                        if (data.orderTransport[i][1].toString().equals(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
                             JOptionPane.showMessageDialog(new JFrame(), "Транспорт уже есть в заказе.");
                             return;
                         }

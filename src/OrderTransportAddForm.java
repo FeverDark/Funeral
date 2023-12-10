@@ -16,13 +16,13 @@ public class OrderTransportAddForm extends JFrame {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setContentPane(mainPanel);
         this.pack();
-        for (int i = 0; i < data.getTransport().length; ++i) {
-            comboBox2.addItem(new ComboItem(data.getTransport()[i][1].toString(), data.getTransport()[i][0].toString()));
+        for (int i = 0; i < data.transport.length; ++i) {
+            comboBox2.addItem(new ComboItem(data.transport[i][1].toString(), data.transport[i][0].toString()));
         }
         if (comboBox2.getSelectedIndex() != -1) {
-            for (int i = 0; i < data.getTransport().length; ++i) {
-                if (Integer.parseInt(data.getTransport()[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
-                    capacity = Integer.parseInt(data.getTransport()[i][2].toString());
+            for (int i = 0; i < data.transport.length; ++i) {
+                if (Integer.parseInt(data.transport[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
+                    capacity = Integer.parseInt(data.transport[i][2].toString());
                     label11.setText("Вместимость: " + capacity);
                     break;
                 }
@@ -43,13 +43,13 @@ public class OrderTransportAddForm extends JFrame {
                 item.setId(Integer.parseInt(((ComboItem) comboBox2.getSelectedItem()).getValue()));
                 item.setModel(((ComboItem) comboBox2.getSelectedItem()).getKey());
                 item.setCapacity(capacity);
-                /*for(int i = 0; i < data.getTransport().length; ++i){
-                    if(Integer.parseInt(data.getTransport()[i][0].toString()) == item.getId()) {
-                        item.setCapacity(Integer.parseInt(data.getTransport()[i][2].toString()));
+                /*for(int i = 0; i < data.transport.length; ++i){
+                    if(Integer.parseInt(data.transport[i][0].toString()) == item.getId()) {
+                        item.setCapacity(Integer.parseInt(data.transport[i][2].toString()));
                         break;
                     }
                 }*/
-                model.addRow(new Object[]{"Транспорт", item.getModel(), item.getCapacity()});
+                model.addRow(new Object[]{"Транспорт", item.getModel(), "Мест: " + item.getCapacity()});
                 order.add(item);
                 Exit();
             }
@@ -58,9 +58,9 @@ public class OrderTransportAddForm extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (comboBox2.getSelectedIndex() != -1) {
-                    for (int i = 0; i < data.getTransport().length; ++i) {
-                        if (Integer.parseInt(data.getTransport()[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
-                            capacity = Integer.parseInt(data.getTransport()[i][2].toString());
+                    for (int i = 0; i < data.transport.length; ++i) {
+                        if (Integer.parseInt(data.transport[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
+                            capacity = Integer.parseInt(data.transport[i][2].toString());
                             label11.setText("Вместимость: " + capacity);
                             break;
                         }

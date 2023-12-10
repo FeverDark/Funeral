@@ -15,28 +15,28 @@ public class ServiceEdit extends JFrame {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setContentPane(mainPanel);
         this.pack();
-        textField1.setText(Objects.toString(data.getService()[src][0], ""));
-        textField2.setText(Objects.toString(data.getService()[src][1], ""));
-        textField3.setText(Objects.toString(data.getService()[src][2], ""));
+        textField1.setText(Objects.toString(data.service[src][0], ""));
+        textField2.setText(Objects.toString(data.service[src][1], ""));
+        textField3.setText(Objects.toString(data.service[src][2], ""));
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (textField1.getText().equals(Objects.toString(data.getService()[src][0], "")) &&
-                        textField2.getText().equals(Objects.toString(data.getService()[src][1], "")) &&
-                        textField3.getText().equals(Objects.toString(data.getService()[src][2], ""))) {
+                if (textField1.getText().equals(Objects.toString(data.service[src][0], "")) &&
+                        textField2.getText().equals(Objects.toString(data.service[src][1], "")) &&
+                        textField3.getText().equals(Objects.toString(data.service[src][2], ""))) {
                     Exit();
                 } else {
                     if (textField1.getText().isEmpty() || textField2.getText().isEmpty() || textField3.getText().isEmpty()) {
                         JOptionPane.showMessageDialog(new JFrame(), "Поля должны быть заполненными.");
-                        textField1.setText(Objects.toString(data.getService()[src][0], ""));
-                        textField2.setText(Objects.toString(data.getService()[src][1], ""));
-                        textField3.setText(Objects.toString(data.getService()[src][2], ""));
+                        textField1.setText(Objects.toString(data.service[src][0], ""));
+                        textField2.setText(Objects.toString(data.service[src][1], ""));
+                        textField3.setText(Objects.toString(data.service[src][2], ""));
                         return;
                     }
-                    for (int i = 0; i < data.getService().length; ++i) {
-                        if (!textField1.getText().equals(data.getService()[src][0].toString())) {
+                    for (int i = 0; i < data.service.length; ++i) {
+                        if (!textField1.getText().equals(data.service[src][0].toString())) {
                             JOptionPane.showMessageDialog(new JFrame(), "ID изменять нельзя.");
-                            textField1.setText(Objects.toString(data.getService()[src][0], ""));
+                            textField1.setText(Objects.toString(data.service[src][0], ""));
                             return;
                         }
                     }
@@ -44,14 +44,14 @@ public class ServiceEdit extends JFrame {
                         Integer.parseInt(textField1.getText());
                     } catch (NumberFormatException c) {
                         JOptionPane.showMessageDialog(new JFrame(), "Неправильно введен ID.");
-                        textField1.setText(Objects.toString(data.getService()[src][0], ""));
+                        textField1.setText(Objects.toString(data.service[src][0], ""));
                         return;
                     }
                     try {
                         Integer.parseInt(textField3.getText());
                     } catch (NumberFormatException c) {
                         JOptionPane.showMessageDialog(new JFrame(), "Неправильно введена цена.");
-                        textField3.setText(Objects.toString(data.getService()[src][2], ""));
+                        textField3.setText(Objects.toString(data.service[src][2], ""));
                         return;
                     }
                     data.updateService(textField1.getText(), textField2.getText(), textField3.getText());

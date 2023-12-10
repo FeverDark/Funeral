@@ -16,8 +16,8 @@ public class Product extends JFrame {
         this.setContentPane(mainPanel);
         this.pack();
         this.textField3.setText("");
-        for (int i = 0; i < data.getProductsCategory().length; ++i) {
-            comboBox1.addItem(new ComboItem(data.getProductsCategory()[i][1].toString(), data.getProductsCategory()[i][0].toString()));
+        for (int i = 0; i < data.productsCategory.length; ++i) {
+            comboBox1.addItem(new ComboItem(data.productsCategory[i][1].toString(), data.productsCategory[i][0].toString()));
         }
         addButton.addActionListener(new ActionListener() {
             @Override

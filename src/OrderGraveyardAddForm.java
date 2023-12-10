@@ -22,26 +22,26 @@ public class OrderGraveyardAddForm extends JFrame {
         this.setContentPane(mainPanel);
         this.pack();
 
-        for (int i = 0; i < data.getGraveyard().length; ++i) {
-            if (!Arrays.asList(graveyards).contains(data.getGraveyard()[i][1].toString()) && (Integer.parseInt(data.getGraveyard()[i][5].toString()) == 0)) {
-                comboBox1.addItem(new ComboItem(data.getGraveyard()[i][1].toString(), data.getGraveyard()[i][1].toString()));
+        for (int i = 0; i < data.graveyard.length; ++i) {
+            if (!Arrays.asList(graveyards).contains(data.graveyard[i][1].toString()) && (Integer.parseInt(data.graveyard[i][5].toString()) == 0)) {
+                comboBox1.addItem(new ComboItem(data.graveyard[i][1].toString(), data.graveyard[i][1].toString()));
                 graveyards = Arrays.copyOf(graveyards, graveyards.length + 1);
-                graveyards[graveyards.length - 1] = data.getGraveyard()[i][1].toString();
+                graveyards[graveyards.length - 1] = data.graveyard[i][1].toString();
             }
         }
         if (comboBox1.getSelectedIndex() != -1) {
             comboBox2.removeAllItems();
-            for (int i = 0; i < data.getGraveyard().length; ++i) {
-                if (data.getGraveyard()[i][1].toString().equals(((ComboItem) comboBox1.getSelectedItem()).getValue()) && (Integer.parseInt(data.getGraveyard()[i][5].toString()) == 0)) {
-                    comboBox2.addItem(new ComboItem(data.getGraveyard()[i][2].toString(), data.getGraveyard()[i][0].toString()));
+            for (int i = 0; i < data.graveyard.length; ++i) {
+                if (data.graveyard[i][1].toString().equals(((ComboItem) comboBox1.getSelectedItem()).getValue()) && (Integer.parseInt(data.graveyard[i][5].toString()) == 0)) {
+                    comboBox2.addItem(new ComboItem(data.graveyard[i][2].toString(), data.graveyard[i][0].toString()));
                 }
             }
         }
         if (comboBox2.getSelectedIndex() != -1) {
-            for (int i = 0; i < data.getGraveyard().length; ++i) {
-                if (Integer.parseInt(data.getGraveyard()[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
-                    price = Integer.parseInt(data.getGraveyard()[i][3].toString());
-                    area = Float.parseFloat(data.getGraveyard()[i][4].toString());
+            for (int i = 0; i < data.graveyard.length; ++i) {
+                if (Integer.parseInt(data.graveyard[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
+                    price = Integer.parseInt(data.graveyard[i][3].toString());
+                    area = Float.parseFloat(data.graveyard[i][4].toString());
                     textField1.setText(String.valueOf(price));
                     textField2.setText(String.valueOf(area));
                 }
@@ -64,7 +64,7 @@ public class OrderGraveyardAddForm extends JFrame {
                 item.setNumber(Integer.parseInt(((ComboItem) comboBox2.getSelectedItem()).getKey()));
                 item.setArea(area);
                 item.setPrice(price);
-                model.addRow(new Object[]{"Место на кладбище", item.getName(), item.getNumber(), item.getArea(), item.getPrice()});
+                model.addRow(new Object[]{"Место на кладбище", item.getName(), "Место: " + item.getNumber(), "Площадь: " + item.getArea(), item.getPrice()});
                 order.add(item);
                 Exit();
             }
@@ -74,9 +74,9 @@ public class OrderGraveyardAddForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (comboBox1.getSelectedIndex() != -1) {
                     comboBox2.removeAllItems();
-                    for (int i = 0; i < data.getGraveyard().length; ++i) {
-                        if (data.getGraveyard()[i][1].toString().equals(((ComboItem) comboBox1.getSelectedItem()).getValue()) && (Integer.parseInt(data.getGraveyard()[i][5].toString()) == 0)) {
-                            comboBox2.addItem(new ComboItem(data.getGraveyard()[i][2].toString(), data.getGraveyard()[i][0].toString()));
+                    for (int i = 0; i < data.graveyard.length; ++i) {
+                        if (data.graveyard[i][1].toString().equals(((ComboItem) comboBox1.getSelectedItem()).getValue()) && (Integer.parseInt(data.graveyard[i][5].toString()) == 0)) {
+                            comboBox2.addItem(new ComboItem(data.graveyard[i][2].toString(), data.graveyard[i][0].toString()));
                         }
                     }
                 }
@@ -86,10 +86,10 @@ public class OrderGraveyardAddForm extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (comboBox2.getSelectedIndex() != -1) {
-                    for (int i = 0; i < data.getGraveyard().length; ++i) {
-                        if (Integer.parseInt(data.getGraveyard()[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
-                            price = Integer.parseInt(data.getGraveyard()[i][3].toString());
-                            area = Float.parseFloat(data.getGraveyard()[i][4].toString());
+                    for (int i = 0; i < data.graveyard.length; ++i) {
+                        if (Integer.parseInt(data.graveyard[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
+                            price = Integer.parseInt(data.graveyard[i][3].toString());
+                            area = Float.parseFloat(data.graveyard[i][4].toString());
                             textField1.setText(String.valueOf(price));
                             textField2.setText(String.valueOf(area));
                         }

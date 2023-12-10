@@ -14,8 +14,8 @@ public class OrderPlaceAddForm extends JFrame {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setContentPane(mainPanel);
         this.pack();
-        for (int i = 0; i < data.getPlace().length; ++i) {
-            comboBox2.addItem(new ComboItem(data.getPlace()[i][1].toString(), data.getPlace()[i][0].toString()));
+        for (int i = 0; i < data.place.length; ++i) {
+            comboBox2.addItem(new ComboItem(data.place[i][1].toString(), data.place[i][0].toString()));
         }
         addButton.addActionListener(new ActionListener() {
             @Override
@@ -31,9 +31,9 @@ public class OrderPlaceAddForm extends JFrame {
                 }
                 item.setId(Integer.parseInt(((ComboItem) comboBox2.getSelectedItem()).getValue()));
                 item.setName(((ComboItem) comboBox2.getSelectedItem()).getKey());
-                for (int i = 0; i < data.getPlace().length; ++i) {
-                    if (Integer.parseInt(data.getPlace()[i][0].toString()) == item.getId()) {
-                        item.setAdress(data.getPlace()[i][2].toString());
+                for (int i = 0; i < data.place.length; ++i) {
+                    if (Integer.parseInt(data.place[i][0].toString()) == item.getId()) {
+                        item.setAdress(data.place[i][2].toString());
                         break;
                     }
                 }

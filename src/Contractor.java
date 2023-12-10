@@ -26,8 +26,8 @@ public class Contractor extends JFrame {
                     JOptionPane.showMessageDialog(new JFrame(), "Поля должны быть заполненными.");
                     return;
                 }
-                for (int i = 0; i < data.getContractor().length; ++i) {
-                    if (textField1.getText().equals(data.getContractor()[i][0].toString())) {
+                for (int i = 0; i < data.contractor.length; ++i) {
+                    if (textField1.getText().equals(data.contractor[i][0].toString())) {
                         JOptionPane.showMessageDialog(new JFrame(), "Подрядчик должен быть уникальным.");
                         return;
                     }

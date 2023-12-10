@@ -16,11 +16,11 @@ public class OrderProducts extends JFrame {
         this.pack();
 
         textField1.setText("");
-        for (int i = 0; i < data.getOrdering().length; ++i) {
-            comboBox2.addItem(new ComboItem(data.getOrdering()[i][0].toString(), data.getOrdering()[i][0].toString()));
+        for (int i = 0; i < data.ordering.length; ++i) {
+            comboBox2.addItem(new ComboItem(data.ordering[i][0].toString(), data.ordering[i][0].toString()));
         }
-        for (int i = 0; i < data.getProduct().length; ++i) {
-            comboBox1.addItem(new ComboItem(data.getProduct()[i][1].toString(), data.getProduct()[i][0].toString()));
+        for (int i = 0; i < data.product.length; ++i) {
+            comboBox1.addItem(new ComboItem(data.product[i][1].toString(), data.product[i][0].toString()));
         }
         addButton.addActionListener(new ActionListener() {
             @Override
@@ -29,9 +29,9 @@ public class OrderProducts extends JFrame {
                     JOptionPane.showMessageDialog(new JFrame(), "Количество не должно быть нулевым или пустым.");
                     return;
                 }
-                for (int i = 0; i != data.getOrderProducts().length; ++i) {
-                    if (data.getOrderProducts()[i][0].toString().equals(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
-                        if (data.getOrderProducts()[i][1].toString().equals(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                for (int i = 0; i != data.orderProducts.length; ++i) {
+                    if (data.orderProducts[i][0].toString().equals(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
+                        if (data.orderProducts[i][1].toString().equals(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
                             JOptionPane.showMessageDialog(new JFrame(), "Товар уже есть в заказе.");
                             return;
                         }

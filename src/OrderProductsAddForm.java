@@ -20,14 +20,14 @@ public class OrderProductsAddForm extends JFrame {
         this.setContentPane(mainPanel);
         this.pack();
 
-        for (int i = 0; i < data.getProduct().length; ++i) {
-            comboBox1.addItem(new ComboItem(data.getProduct()[i][1].toString(), data.getProduct()[i][0].toString()));
+        for (int i = 0; i < data.product.length; ++i) {
+            comboBox1.addItem(new ComboItem(data.product[i][1].toString(), data.product[i][0].toString()));
         }
         if (comboBox1.getSelectedIndex() != -1) {
-            for (int i = 0; i < data.getProduct().length; ++i) {
-                if (Integer.parseInt(data.getProduct()[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                    price = Integer.parseInt(data.getProduct()[i][3].toString());
-                    stock = Integer.parseInt(data.getProduct()[i][4].toString());
+            for (int i = 0; i < data.product.length; ++i) {
+                if (Integer.parseInt(data.product[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                    price = Integer.parseInt(data.product[i][3].toString());
+                    stock = Integer.parseInt(data.product[i][4].toString());
                     label11.setText("Цена: " + price);
                     label12.setText("Осталось на складе: " + stock);
                     break;
@@ -64,19 +64,19 @@ public class OrderProductsAddForm extends JFrame {
                 item.setName(((ComboItem) comboBox1.getSelectedItem()).getKey());
                 item.setAmount(Integer.parseInt(textField1.getText()));
                 item.setPrice(price);
-                for (int i = 0; i < data.getProduct().length; ++i) {
-                    if (Integer.parseInt(data.getProduct()[i][0].toString()) == item.getId()) {
-                        //item.setPrice(Integer.parseInt(data.getProduct()[i][3].toString()));
-                        for (int j = 0; j < data.getProductsCategory().length; ++j) {
-                            if (Integer.parseInt(data.getProduct()[i][2].toString()) == Integer.parseInt(data.getProductsCategory()[j][0].toString())) {
-                                item.setCategory(data.getProductsCategory()[j][1].toString());
+                for (int i = 0; i < data.product.length; ++i) {
+                    if (Integer.parseInt(data.product[i][0].toString()) == item.getId()) {
+                        //item.setPrice(Integer.parseInt(data.product[i][3].toString()));
+                        for (int j = 0; j < data.productsCategory.length; ++j) {
+                            if (Integer.parseInt(data.product[i][2].toString()) == Integer.parseInt(data.productsCategory[j][0].toString())) {
+                                item.setCategory(data.productsCategory[j][1].toString());
                                 break;
                             }
                         }
                         break;
                     }
                 }
-                model.addRow(new Object[]{"Товар", item.getName(), item.getCategory(), item.getAmount(), item.getPrice()});
+                model.addRow(new Object[]{"Товар", item.getName(), item.getCategory(), "Количество: " + item.getAmount(), item.getPrice()});
                 order.add(item);
                 Exit();
             }
@@ -85,10 +85,10 @@ public class OrderProductsAddForm extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (comboBox1.getSelectedIndex() != -1) {
-                    for (int i = 0; i < data.getProduct().length; ++i) {
-                        if (Integer.parseInt(data.getProduct()[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                            price = Integer.parseInt(data.getProduct()[i][3].toString());
-                            stock = Integer.parseInt(data.getProduct()[i][4].toString());
+                    for (int i = 0; i < data.product.length; ++i) {
+                        if (Integer.parseInt(data.product[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                            price = Integer.parseInt(data.product[i][3].toString());
+                            stock = Integer.parseInt(data.product[i][4].toString());
                             label11.setText("Цена: " + price);
                             label12.setText("Осталось на складе: " + stock);
                             break;

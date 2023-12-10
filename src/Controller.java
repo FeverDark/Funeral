@@ -10,6 +10,7 @@ public class Controller {
     private int state = 0;
     private boolean update = false;
     private JTable tempTable;
+
     public Controller() {
     }
 

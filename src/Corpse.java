@@ -21,8 +21,8 @@ public class Corpse extends JFrame {
         this.pack();
 
         textField3.setText("");
-        for (int i = 0; i < data.getOrdering().length; ++i) {
-            comboBox1.addItem(new ComboItem(data.getOrdering()[i][0].toString(), data.getOrdering()[i][0].toString()));
+        for (int i = 0; i < data.ordering.length; ++i) {
+            comboBox1.addItem(new ComboItem(data.ordering[i][0].toString(), data.ordering[i][0].toString()));
         }
         datePicker1.setDateToToday();
         datePicker2.setDateToToday();

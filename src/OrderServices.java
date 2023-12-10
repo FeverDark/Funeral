@@ -13,18 +13,18 @@ public class OrderServices extends JFrame {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setContentPane(mainPanel);
         this.pack();
-        for (int i = 0; i < data.getOrdering().length; ++i) {
-            comboBox1.addItem(new ComboItem(data.getOrdering()[i][0].toString(), data.getOrdering()[i][0].toString()));
+        for (int i = 0; i < data.ordering.length; ++i) {
+            comboBox1.addItem(new ComboItem(data.ordering[i][0].toString(), data.ordering[i][0].toString()));
         }
-        for (int i = 0; i < data.getService().length; ++i) {
-            comboBox2.addItem(new ComboItem(data.getService()[i][1].toString(), data.getService()[i][0].toString()));
+        for (int i = 0; i < data.service.length; ++i) {
+            comboBox2.addItem(new ComboItem(data.service[i][1].toString(), data.service[i][0].toString()));
         }
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (int i = 0; i != data.getOrderServices().length; ++i) {
-                    if (data.getOrderServices()[i][0].toString().equals(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                        if (data.getOrderServices()[i][1].toString().equals(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
+                for (int i = 0; i != data.orderServices.length; ++i) {
+                    if (data.orderServices[i][0].toString().equals(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                        if (data.orderServices[i][1].toString().equals(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
                             JOptionPane.showMessageDialog(new JFrame(), "Услуга уже есть в заказе.");
                             return;
                         }

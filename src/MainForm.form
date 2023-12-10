@@ -220,10 +220,10 @@
             </properties>
             <border type="none"/>
             <children>
-              <component id="f8a5" class="javax.swing.JButton" binding="button19" default-binding="true">
+              <component id="63fd6" class="javax.swing.JButton" binding="button17" default-binding="true">
                 <constraints/>
                 <properties>
-                  <text value="Удалить"/>
+                  <text value="Добавить"/>
                 </properties>
               </component>
               <component id="dea91" class="javax.swing.JButton" binding="button18" default-binding="true">
@@ -232,10 +232,10 @@
                   <text value="Обновить"/>
                 </properties>
               </component>
-              <component id="63fd6" class="javax.swing.JButton" binding="button17" default-binding="true">
+              <component id="f8a5" class="javax.swing.JButton" binding="button19" default-binding="true">
                 <constraints/>
                 <properties>
-                  <text value="Добавить"/>
+                  <text value="Удалить"/>
                 </properties>
               </component>
             </children>

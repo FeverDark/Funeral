@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import static java.lang.Thread.sleep;
 
 public class OrderCreation extends JFrame {
+    private final Thread sumThread;
     private JPanel mainPanel;
     private JTextField textField1;
     private JTextField textField2;
@@ -33,7 +34,6 @@ public class OrderCreation extends JFrame {
     private int clientId = -1;
     private int orderId = -1;
     private int price = 0;
-    private Thread sumThread;
 
     public OrderCreation(String title, DB data, Controller control) {
         super(title);
@@ -52,7 +52,6 @@ public class OrderCreation extends JFrame {
                 return false;
             }
 
-            ;
         };
         model.addColumn("");
         model.addColumn("");
@@ -70,28 +69,26 @@ public class OrderCreation extends JFrame {
         tempTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         tempTable.removeEditor();
         this.mainScroll.setViewportView(tempTable);
-        for (int i = 0; i < data.getEmployer().length; ++i) {
-            if (Integer.parseInt(data.getEmployer()[i][0].toString()) == data.employerId)
-                textField3.setText(data.getEmployer()[i][1].toString());
+        for (int i = 0; i < data.employer.length; ++i) {
+            if (Integer.parseInt(data.employer[i][0].toString()) == data.employerId)
+                textField3.setText(data.employer[i][1].toString());
             break;
         }
         ArrayList<Item> order = new ArrayList<Item>();
-        Runnable task = () -> {
+        sumThread = new Thread(() -> {
             while (true) {
-                System.out.println("1");
+                price = 0;
                 for (int i = 0; i < order.size(); ++i) {
-                    price = 0;
                     price += order.get(i).getPrice();
                 }
                 textField5.setText(String.valueOf(price));
                 try {
-                    sleep(10);
+                    sleep(500);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
-        };
-        sumThread = new Thread(task);
+        });
         sumThread.start();
         addButton.addActionListener(new ActionListener() {
             @Override
@@ -150,9 +147,9 @@ public class OrderCreation extends JFrame {
                 ds.setPortNumber(Integer.parseInt("1433"));
                 ds.setDatabaseName("Bureau");
                 ds.setTrustServerCertificate(true);
-                for (int i = 0; i < data.getClient().length; ++i) {
-                    if (data.getClient()[i][1].toString().equals(textField1.getText()) && data.getClient()[i][2].toString().equals(textField2.getText())) {
-                        clientId = Integer.parseInt(data.getClient()[i][0].toString());
+                for (int i = 0; i < data.client.length; ++i) {
+                    if (data.client[i][1].toString().equals(textField1.getText()) && data.client[i][2].toString().equals(textField2.getText())) {
+                        clientId = Integer.parseInt(data.client[i][0].toString());
                         break;
                     }
                 }
@@ -175,13 +172,13 @@ public class OrderCreation extends JFrame {
                         c.printStackTrace();
                     }
                 }
+                price = 0;
                 for (int i = 0; i < order.size(); ++i) {
-                    price = 0;
                     price += order.get(i).getPrice();
                 }
                 try {
                     Connection con = ds.getConnection();
-                    CallableStatement cstmt = con.prepareCall("INSERT INTO Ordering VALUES(" + clientId + ", " + data.employerId + ", '" + LocalDate.now().toString() + "', " + price + ", '" + (textField4.getText().isEmpty() ? "NULL" : textField4.getText()) + "');");
+                    CallableStatement cstmt = con.prepareCall("INSERT INTO Ordering VALUES(" + clientId + ", " + data.employerId + ", '" + LocalDate.now() + "', " + price + ", " + (textField4.getText().isEmpty() ? "NULL" : "'" + textField4.getText() + "'") + ");");
                     cstmt.execute();
                 } catch (SQLException c) {
                     c.printStackTrace();
@@ -189,7 +186,7 @@ public class OrderCreation extends JFrame {
                 try {
                     Connection con = ds.getConnection();
                     Statement stmt = con.createStatement();
-                    ResultSet rs = stmt.executeQuery("SELECT id FROM Ordering WHERE client_id = " + clientId + " AND employer_id = " + data.employerId + " AND order_date = '" + LocalDate.now().toString() + "' AND price = " + price + ";");
+                    ResultSet rs = stmt.executeQuery("SELECT id FROM Ordering WHERE client_id = " + clientId + " AND employer_id = " + data.employerId + " AND order_date = '" + LocalDate.now() + "' AND price = " + price + ";");
                     while (rs.next()) {
                         orderId = rs.getInt(1);
                     }

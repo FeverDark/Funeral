@@ -9,7 +9,10 @@ import java.awt.event.ActionListener;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Objects;
+
+import static java.lang.Thread.sleep;
 
 public class OrderCheck extends JFrame {
     private JTextField textField1;
@@ -24,20 +27,151 @@ public class OrderCheck extends JFrame {
     private JTextField textField6;
     private JTextField textField7;
     private JComboBox comboBox1;
+    private JButton button3;
+    private JButton button4;
+    private JButton editButton;
+    private JButton button5;
+    private JRadioButton radioButton1;
+    private JRadioButton radioButton2;
+    private JRadioButton radioButton3;
+    private JRadioButton radioButton4;
+    private JRadioButton radioButton5;
+    private JRadioButton radioButton6;
+    private JButton delButton;
     private String comm = null;
+    public OrderCheck getOrder() {
+        return this;
+    }
+    private DB data;
+    private DefaultTableModel model;
+    private ArrayList<Item> order;
+    private int orderSize = 0;
+    public void updateOrder() {
+        if (comboBox1.getSelectedIndex() != -1) {
+            model.setRowCount(0);
+            order = new ArrayList<Item>();
+            for (int i = 0; i < data.ordering.length; ++i) {
+                if (Integer.parseInt(data.ordering[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                    textField1.setText(Objects.toString(data.ordering[i][0], ""));
+                    for (int j = 0; j < data.client.length; ++j) {
+                        if (Integer.parseInt(data.client[j][0].toString()) == Integer.parseInt(data.ordering[i][1].toString())) {
+                            textField2.setText(Objects.toString(data.client[j][1], ""));
+                            textField6.setText(Objects.toString(data.client[j][2], ""));
+                        }
+                    }
+                    for (int j = 0; j < data.employer.length; ++j) {
+                        if (Integer.parseInt(data.employer[j][0].toString()) == Integer.parseInt(data.ordering[i][2].toString())) {
+                            textField3.setText(Objects.toString(data.employer[j][1], ""));
+                        }
+                    }
+                    textField4.setText(Objects.toString(data.ordering[i][3], ""));
+                    textField5.setText(Objects.toString(data.ordering[i][4], ""));
+                    comm = Objects.toString(data.ordering[i][5], "");
+                    textField7.setText(comm);
+                    break;
+                }
+            }
+            for (int i = 0; i < data.corpse.length; ++i) {
+                if (Integer.parseInt(data.corpse[i][5].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                    OrderCorpseAdd item = new OrderCorpseAdd();;
+                    item.setName(data.corpse[i][1].toString());
+                    item.setBdate(data.corpse[i][2].toString());
+                    item.setDdate(data.corpse[i][3].toString());
+                    order.add(item);
+                    model.addRow(new Object[]{"Покойник", data.corpse[i][1].toString(), data.corpse[i][2].toString(), data.corpse[i][3].toString(), Objects.toString(data.corpse[i][4], "")});
+                }
+            }
+            for (int i = 0; i < data.graveyard.length; ++i) {
+                if (Integer.parseInt(data.graveyard[i][5].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                    OrderGraveyardAdd item = new OrderGraveyardAdd();
+                    item.setId(Integer.parseInt(data.graveyard[i][0].toString()));
+                    item.setName(data.graveyard[i][1].toString());
+                    item.setNumber(Integer.parseInt(data.graveyard[i][2].toString()));
+                    item.setArea(Float.parseFloat(data.graveyard[i][4].toString()));
+                    item.setPrice(Integer.parseInt(data.graveyard[i][3].toString()));
+                    order.add(item);
+                    model.addRow(new Object[]{"Место на кладбище", data.graveyard[i][1].toString(), "Место: " + data.graveyard[i][2].toString(), "Площадь: " + data.graveyard[i][4].toString(), data.graveyard[i][3].toString()});
+                }
+            }
+            for (int i = 0; i < data.orderPlace.length; ++i) {
+                if (Integer.parseInt(data.orderPlace[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                    for (int j = 0; j < data.place.length; ++j) {
+                        if (Integer.parseInt(data.place[j][0].toString()) == Integer.parseInt(data.orderPlace[i][1].toString())) {
+                            OrderPlaceAdd item = new OrderPlaceAdd();
+                            item.setId(Integer.parseInt(data.place[j][0].toString()));
+                            item.setName(data.place[j][1].toString());
+                            item.setAdress(data.place[j][2].toString());
+                            order.add(item);
+                            model.addRow(new Object[]{"Место церемонии", data.place[j][1].toString(), data.place[j][2].toString() == null ? "" : data.place[j][2].toString()});
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < data.orderProducts.length; ++i) {
+                if (Integer.parseInt(data.orderProducts[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                    for (int j = 0; j < data.place.length; ++j) {
+                        if (Integer.parseInt(data.product[j][0].toString()) == Integer.parseInt(data.orderProducts[i][1].toString())) {
+                            for (int k = 0; k < data.productsCategory.length; ++k) {
+                                if (Integer.parseInt(data.product[j][2].toString()) == Integer.parseInt(data.productsCategory[k][0].toString())) {
+                                    OrderProductsAdd item = new OrderProductsAdd();
+                                    item.setId(Integer.parseInt(data.product[j][0].toString()));
+                                    item.setName(data.product[j][1].toString());
+                                    item.setAmount(Integer.parseInt(data.orderProducts[i][2].toString()));
+                                    item.setPrice(item.getAmount() * Integer.parseInt(data.product[j][3].toString()));
+                                    item.setCategory(data.productsCategory[k][1].toString());
+                                    order.add(item);
+                                    model.addRow(new Object[]{"Товар", data.product[j][1].toString(), data.productsCategory[k][1].toString(), "Количество:" + data.orderProducts[i][2].toString(), Integer.parseInt(data.orderProducts[i][2].toString()) * Integer.parseInt(data.product[j][3].toString())});
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < data.orderServices.length; ++i) {
+                if (Integer.parseInt(data.orderServices[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                    for (int j = 0; j < data.service.length; ++j) {
+                        if (Integer.parseInt(data.service[j][0].toString()) == Integer.parseInt(data.orderServices[i][1].toString())) {
+                            OrderServicesAdd item = new OrderServicesAdd();
+                            item.setId(Integer.parseInt(data.service[j][0].toString()));
+                            item.setName(data.service[j][1].toString());
+                            item.setPrice(Integer.parseInt(data.service[j][2].toString()));
+                            order.add(item);
+                            model.addRow(new Object[]{"Услуга", data.service[j][1].toString(), "", "", data.service[j][2].toString()});
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < data.orderTransport.length; ++i) {
+                if (Integer.parseInt(data.orderTransport[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                    for (int j = 0; j < data.transport.length; ++j) {
+                        if (Integer.parseInt(data.transport[j][0].toString()) == Integer.parseInt(data.orderTransport[i][1].toString())) {
+                            OrderTransportAdd item = new OrderTransportAdd();
+                            item.setId(Integer.parseInt(data.transport[j][0].toString()));
+                            item.setModel(data.transport[j][1].toString());
+                            item.setCapacity(Integer.parseInt(data.transport[j][2].toString()));
+                            order.add(item);
+                            model.addRow(new Object[]{"Транспорт", data.transport[j][1].toString(), "Мест: " + data.transport[j][2].toString()});
+                        }
+                    }
+                }
+            }
+            orderSize = order.size();
+        }
+        return;
+    }
 
-    public OrderCheck(String title, DB data, Controller control) {
+    public OrderCheck(String title, DB d, Controller control) {
         super(title);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setContentPane(mainPanel);
         this.pack();
-        DefaultTableModel model = new DefaultTableModel();
+        data = d;
+        model = new DefaultTableModel();
         JTable tempTable = new JTable(model) {
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
 
-            ;
         };
         model.addColumn("");
         model.addColumn("");
@@ -56,81 +190,117 @@ public class OrderCheck extends JFrame {
         tempTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         tempTable.removeEditor();
         this.mainScroll.setViewportView(tempTable);
-        for (int i = 0; i < data.getOrdering().length; ++i) {
-            comboBox1.addItem(new ComboItem(data.getOrdering()[i][0].toString(), data.getOrdering()[i][0].toString()));
+        for (int i = 0; i < data.ordering.length; ++i) {
+            comboBox1.addItem(new ComboItem(data.ordering[i][0].toString(), data.ordering[i][0].toString()));
         }
         if (comboBox1.getSelectedIndex() != -1) {
-            for (int i = 0; i < data.getOrdering().length; ++i) {
-                if (Integer.parseInt(data.getOrdering()[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                    textField1.setText(Objects.toString(data.getOrdering()[i][0], ""));
-                    for (int j = 0; j < data.getClient().length; ++j) {
-                        if (Integer.parseInt(data.getClient()[j][0].toString()) == Integer.parseInt(data.getOrdering()[i][1].toString())) {
-                            textField2.setText(Objects.toString(data.getClient()[j][1], ""));
-                            textField6.setText(Objects.toString(data.getClient()[j][2], ""));
+            order = new ArrayList<Item>();
+            for (int i = 0; i < data.ordering.length; ++i) {
+                if (Integer.parseInt(data.ordering[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                    textField1.setText(Objects.toString(data.ordering[i][0], ""));
+                    for (int j = 0; j < data.client.length; ++j) {
+                        if (Integer.parseInt(data.client[j][0].toString()) == Integer.parseInt(data.ordering[i][1].toString())) {
+                            textField2.setText(Objects.toString(data.client[j][1], ""));
+                            textField6.setText(Objects.toString(data.client[j][2], ""));
                         }
                     }
-                    for (int j = 0; j < data.getEmployer().length; ++j) {
-                        if (Integer.parseInt(data.getEmployer()[j][0].toString()) == Integer.parseInt(data.getOrdering()[i][2].toString())) {
-                            textField3.setText(Objects.toString(data.getEmployer()[j][1], ""));
+                    for (int j = 0; j < data.employer.length; ++j) {
+                        if (Integer.parseInt(data.employer[j][0].toString()) == Integer.parseInt(data.ordering[i][2].toString())) {
+                            textField3.setText(Objects.toString(data.employer[j][1], ""));
                         }
                     }
-                    textField4.setText(Objects.toString(data.getOrdering()[i][3], ""));
-                    textField5.setText(Objects.toString(data.getOrdering()[i][4], ""));
-                    comm = Objects.toString(data.getOrdering()[i][5], "");
+                    textField4.setText(Objects.toString(data.ordering[i][3], ""));
+                    textField5.setText(Objects.toString(data.ordering[i][4], ""));
+                    comm = Objects.toString(data.ordering[i][5], "");
                     textField7.setText(comm);
                     break;
                 }
             }
-            for (int i = 0; i < data.getCorpse().length; ++i) {
-                if (Integer.parseInt(data.getCorpse()[i][5].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                    model.addRow(new Object[]{"Покойник", data.getCorpse()[i][1].toString(), data.getCorpse()[i][2].toString(), data.getCorpse()[i][3].toString(), data.getCorpse()[i][4].toString()});
+            for (int i = 0; i < data.corpse.length; ++i) {
+                if (Integer.parseInt(data.corpse[i][5].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                    OrderCorpseAdd item = new OrderCorpseAdd();;
+                    item.setName(data.corpse[i][1].toString());
+                    item.setBdate(data.corpse[i][2].toString());
+                    item.setDdate(data.corpse[i][3].toString());
+                    order.add(item);
+                    model.addRow(new Object[]{"Покойник", data.corpse[i][1].toString(), data.corpse[i][2].toString(), data.corpse[i][3].toString(), Objects.toString(data.corpse[i][4], "")});
                 }
             }
-            for (int i = 0; i < data.getGraveyard().length; ++i) {
-                if (Integer.parseInt(data.getGraveyard()[i][5].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                    model.addRow(new Object[]{"Место на кладбище", data.getGraveyard()[i][1].toString(), data.getGraveyard()[i][2].toString(), data.getGraveyard()[i][4].toString(), data.getGraveyard()[i][3].toString()});
+            for (int i = 0; i < data.graveyard.length; ++i) {
+                if (Integer.parseInt(data.graveyard[i][5].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                    OrderGraveyardAdd item = new OrderGraveyardAdd();
+                    item.setId(Integer.parseInt(data.graveyard[i][0].toString()));
+                    item.setName(data.graveyard[i][1].toString());
+                    item.setNumber(Integer.parseInt(data.graveyard[i][2].toString()));
+                    item.setArea(Float.parseFloat(data.graveyard[i][4].toString()));
+                    item.setPrice(Integer.parseInt(data.graveyard[i][3].toString()));
+                    order.add(item);
+                    model.addRow(new Object[]{"Место на кладбище", data.graveyard[i][1].toString(), "Место: " + data.graveyard[i][2].toString(), "Площадь: " + data.graveyard[i][4].toString(), data.graveyard[i][3].toString()});
                 }
             }
-            for (int i = 0; i < data.getOrderPlace().length; ++i) {
-                if (Integer.parseInt(data.getOrderPlace()[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                    for (int j = 0; j < data.getPlace().length; ++j) {
-                        if (Integer.parseInt(data.getPlace()[j][0].toString()) == Integer.parseInt(data.getOrderPlace()[i][1].toString())) {
-                            model.addRow(new Object[]{"Место церемонии", data.getPlace()[j][1].toString(), data.getPlace()[j][2].toString() == null ? "" : data.getPlace()[j][2].toString()});
+            for (int i = 0; i < data.orderPlace.length; ++i) {
+                if (Integer.parseInt(data.orderPlace[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                    for (int j = 0; j < data.place.length; ++j) {
+                        if (Integer.parseInt(data.place[j][0].toString()) == Integer.parseInt(data.orderPlace[i][1].toString())) {
+                            OrderPlaceAdd item = new OrderPlaceAdd();
+                            item.setId(Integer.parseInt(data.place[j][0].toString()));
+                            item.setName(data.place[j][1].toString());
+                            item.setAdress(data.place[j][2].toString());
+                            order.add(item);
+                            model.addRow(new Object[]{"Место церемонии", data.place[j][1].toString(), data.place[j][2].toString() == null ? "" : data.place[j][2].toString()});
                         }
                     }
                 }
             }
-            for (int i = 0; i < data.getOrderProducts().length; ++i) {
-                if (Integer.parseInt(data.getOrderProducts()[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                    for (int j = 0; j < data.getPlace().length; ++j) {
-                        if (Integer.parseInt(data.getProduct()[j][0].toString()) == Integer.parseInt(data.getOrderProducts()[i][1].toString())) {
-                            for (int k = 0; k < data.getProductsCategory().length; ++k) {
-                                if (Integer.parseInt(data.getProduct()[j][2].toString()) == Integer.parseInt(data.getProductsCategory()[k][0].toString())) {
-                                    model.addRow(new Object[]{"Товар", data.getProduct()[j][1].toString(), data.getProductsCategory()[k][1].toString(), data.getOrderProducts()[i][2].toString(), data.getProduct()[j][3].toString()});
+            for (int i = 0; i < data.orderProducts.length; ++i) {
+                if (Integer.parseInt(data.orderProducts[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                    for (int j = 0; j < data.place.length; ++j) {
+                        if (Integer.parseInt(data.product[j][0].toString()) == Integer.parseInt(data.orderProducts[i][1].toString())) {
+                            for (int k = 0; k < data.productsCategory.length; ++k) {
+                                if (Integer.parseInt(data.product[j][2].toString()) == Integer.parseInt(data.productsCategory[k][0].toString())) {
+                                    OrderProductsAdd item = new OrderProductsAdd();
+                                    item.setId(Integer.parseInt(data.product[j][0].toString()));
+                                    item.setName(data.product[j][1].toString());
+                                    item.setAmount(Integer.parseInt(data.orderProducts[i][2].toString()));
+                                    item.setPrice(item.getAmount() * Integer.parseInt(data.product[j][3].toString()));
+                                    item.setCategory(data.productsCategory[k][1].toString());
+                                    order.add(item);
+                                    model.addRow(new Object[]{"Товар", data.product[j][1].toString(), data.productsCategory[k][1].toString(), "Количество:" + data.orderProducts[i][2].toString(), Integer.parseInt(data.orderProducts[i][2].toString()) * Integer.parseInt(data.product[j][3].toString())});
                                 }
                             }
                         }
                     }
                 }
             }
-            for (int i = 0; i < data.getOrderServices().length; ++i) {
-                if (Integer.parseInt(data.getOrderServices()[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                    for (int j = 0; j < data.getService().length; ++j) {
-                        if (Integer.parseInt(data.getService()[j][0].toString()) == Integer.parseInt(data.getOrderServices()[i][1].toString())) {
-                            model.addRow(new Object[]{"Услуга", "", "", data.getService()[j][1].toString(), data.getService()[j][2].toString()});
+            for (int i = 0; i < data.orderServices.length; ++i) {
+                if (Integer.parseInt(data.orderServices[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                    for (int j = 0; j < data.service.length; ++j) {
+                        if (Integer.parseInt(data.service[j][0].toString()) == Integer.parseInt(data.orderServices[i][1].toString())) {
+                            OrderServicesAdd item = new OrderServicesAdd();
+                            item.setId(Integer.parseInt(data.service[j][0].toString()));
+                            item.setName(data.service[j][1].toString());
+                            item.setPrice(Integer.parseInt(data.service[j][2].toString()));
+                            order.add(item);
+                            model.addRow(new Object[]{"Услуга", data.service[j][1].toString(), "", "", data.service[j][2].toString()});
                         }
                     }
                 }
             }
-            for (int i = 0; i < data.getOrderTransport().length; ++i) {
-                if (Integer.parseInt(data.getOrderTransport()[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                    for (int j = 0; j < data.getTransport().length; ++j) {
-                        if (Integer.parseInt(data.getTransport()[j][0].toString()) == Integer.parseInt(data.getOrderTransport()[i][1].toString())) {
-                            model.addRow(new Object[]{"Транспорт", data.getTransport()[j][1].toString(), data.getTransport()[j][2].toString()});
+            for (int i = 0; i < data.orderTransport.length; ++i) {
+                if (Integer.parseInt(data.orderTransport[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                    for (int j = 0; j < data.transport.length; ++j) {
+                        if (Integer.parseInt(data.transport[j][0].toString()) == Integer.parseInt(data.orderTransport[i][1].toString())) {
+                            OrderTransportAdd item = new OrderTransportAdd();
+                            item.setId(Integer.parseInt(data.transport[j][0].toString()));
+                            item.setModel(data.transport[j][1].toString());
+                            item.setCapacity(Integer.parseInt(data.transport[j][2].toString()));
+                            order.add(item);
+                            model.addRow(new Object[]{"Транспорт", data.transport[j][1].toString(), "Мест: " + data.transport[j][2].toString()});
                         }
                     }
                 }
             }
+            orderSize = order.size();
         }
         button1.addActionListener(new ActionListener() {
             @Override
@@ -162,78 +332,114 @@ public class OrderCheck extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (comboBox1.getSelectedIndex() != -1) {
+                    order = new ArrayList<Item>();
                     model.setRowCount(0);
-                    for (int i = 0; i < data.getOrdering().length; ++i) {
-                        if (Integer.parseInt(data.getOrdering()[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                            textField1.setText(Objects.toString(data.getOrdering()[i][0], ""));
-                            for (int j = 0; j < data.getClient().length; ++j) {
-                                if (Integer.parseInt(data.getClient()[j][0].toString()) == Integer.parseInt(data.getOrdering()[i][1].toString())) {
-                                    textField2.setText(Objects.toString(data.getClient()[j][1], ""));
-                                    textField6.setText(Objects.toString(data.getClient()[j][2], ""));
+                    for (int i = 0; i < data.ordering.length; ++i) {
+                        if (Integer.parseInt(data.ordering[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                            textField1.setText(Objects.toString(data.ordering[i][0], ""));
+                            for (int j = 0; j < data.client.length; ++j) {
+                                if (Integer.parseInt(data.client[j][0].toString()) == Integer.parseInt(data.ordering[i][1].toString())) {
+                                    textField2.setText(Objects.toString(data.client[j][1], ""));
+                                    textField6.setText(Objects.toString(data.client[j][2], ""));
                                 }
                             }
-                            for (int j = 0; j < data.getEmployer().length; ++j) {
-                                if (Integer.parseInt(data.getEmployer()[j][0].toString()) == Integer.parseInt(data.getOrdering()[i][2].toString())) {
-                                    textField3.setText(Objects.toString(data.getEmployer()[j][1], ""));
+                            for (int j = 0; j < data.employer.length; ++j) {
+                                if (Integer.parseInt(data.employer[j][0].toString()) == Integer.parseInt(data.ordering[i][2].toString())) {
+                                    textField3.setText(Objects.toString(data.employer[j][1], ""));
                                 }
                             }
-                            textField4.setText(Objects.toString(data.getOrdering()[i][3], ""));
-                            textField5.setText(Objects.toString(data.getOrdering()[i][4], ""));
-                            comm = Objects.toString(data.getOrdering()[i][5], "");
+                            textField4.setText(Objects.toString(data.ordering[i][3], ""));
+                            textField5.setText(Objects.toString(data.ordering[i][4], ""));
+                            comm = Objects.toString(data.ordering[i][5], "");
                             textField7.setText(comm);
                             break;
                         }
                     }
-                    for (int i = 0; i < data.getCorpse().length; ++i) {
-                        if (Integer.parseInt(data.getCorpse()[i][5].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                            model.addRow(new Object[]{"Покойник", data.getCorpse()[i][1].toString(), data.getCorpse()[i][2].toString(), data.getCorpse()[i][3].toString(), data.getCorpse()[i][4].toString()});
+                    for (int i = 0; i < data.corpse.length; ++i) {
+                        if (Integer.parseInt(data.corpse[i][5].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                            OrderCorpseAdd item = new OrderCorpseAdd();;
+                            item.setName(data.corpse[i][1].toString());
+                            item.setBdate(data.corpse[i][2].toString());
+                            item.setDdate(data.corpse[i][3].toString());
+                            order.add(item);
+                            model.addRow(new Object[]{"Покойник", data.corpse[i][1].toString(), data.corpse[i][2].toString(), data.corpse[i][3].toString(), Objects.toString(data.corpse[i][4], "")});
                         }
                     }
-                    for (int i = 0; i < data.getGraveyard().length; ++i) {
-                        if (Integer.parseInt(data.getGraveyard()[i][5].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                            model.addRow(new Object[]{"Место на кладбище", data.getGraveyard()[i][1].toString(), data.getGraveyard()[i][2].toString(), data.getGraveyard()[i][4].toString(), data.getGraveyard()[i][3].toString()});
+                    for (int i = 0; i < data.graveyard.length; ++i) {
+                        if (Integer.parseInt(data.graveyard[i][5].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                            OrderGraveyardAdd item = new OrderGraveyardAdd();
+                            item.setId(Integer.parseInt(data.graveyard[i][0].toString()));
+                            item.setName(data.graveyard[i][1].toString());
+                            item.setNumber(Integer.parseInt(data.graveyard[i][2].toString()));
+                            item.setArea(Float.parseFloat(data.graveyard[i][4].toString()));
+                            item.setPrice(Integer.parseInt(data.graveyard[i][3].toString()));
+                            order.add(item);
+                            model.addRow(new Object[]{"Место на кладбище", data.graveyard[i][1].toString(), "Место: " + data.graveyard[i][2].toString(), "Площадь: " + data.graveyard[i][4].toString(), data.graveyard[i][3].toString()});
                         }
                     }
-                    for (int i = 0; i < data.getOrderPlace().length; ++i) {
-                        if (Integer.parseInt(data.getOrderPlace()[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                            for (int j = 0; j < data.getPlace().length; ++j) {
-                                if (Integer.parseInt(data.getPlace()[j][0].toString()) == Integer.parseInt(data.getOrderPlace()[i][1].toString())) {
-                                    model.addRow(new Object[]{"Место церемонии", data.getPlace()[j][1].toString(), data.getPlace()[j][2].toString() == null ? "" : data.getPlace()[j][2].toString()});
+                    for (int i = 0; i < data.orderPlace.length; ++i) {
+                        if (Integer.parseInt(data.orderPlace[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                            for (int j = 0; j < data.place.length; ++j) {
+                                if (Integer.parseInt(data.place[j][0].toString()) == Integer.parseInt(data.orderPlace[i][1].toString())) {
+                                    OrderPlaceAdd item = new OrderPlaceAdd();
+                                    item.setId(Integer.parseInt(data.place[j][0].toString()));
+                                    item.setName(data.place[j][1].toString());
+                                    item.setAdress(data.place[j][2].toString());
+                                    order.add(item);
+                                    model.addRow(new Object[]{"Место церемонии", data.place[j][1].toString(), data.place[j][2].toString() == null ? "" : data.place[j][2].toString()});
                                 }
                             }
                         }
                     }
-                    for (int i = 0; i < data.getOrderProducts().length; ++i) {
-                        if (Integer.parseInt(data.getOrderProducts()[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                            for (int j = 0; j < data.getPlace().length; ++j) {
-                                if (Integer.parseInt(data.getProduct()[j][0].toString()) == Integer.parseInt(data.getOrderProducts()[i][1].toString())) {
-                                    for (int k = 0; k < data.getProductsCategory().length; ++k) {
-                                        if (Integer.parseInt(data.getProduct()[j][2].toString()) == Integer.parseInt(data.getProductsCategory()[k][0].toString())) {
-                                            model.addRow(new Object[]{"Товар", data.getProduct()[j][1].toString(), data.getProductsCategory()[k][1].toString(), data.getOrderProducts()[i][2].toString(), data.getProduct()[j][3].toString()});
+                    for (int i = 0; i < data.orderProducts.length; ++i) {
+                        if (Integer.parseInt(data.orderProducts[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                            for (int j = 0; j < data.place.length; ++j) {
+                                if (Integer.parseInt(data.product[j][0].toString()) == Integer.parseInt(data.orderProducts[i][1].toString())) {
+                                    for (int k = 0; k < data.productsCategory.length; ++k) {
+                                        if (Integer.parseInt(data.product[j][2].toString()) == Integer.parseInt(data.productsCategory[k][0].toString())) {
+                                            OrderProductsAdd item = new OrderProductsAdd();
+                                            item.setId(Integer.parseInt(data.product[j][0].toString()));
+                                            item.setName(data.product[j][1].toString());
+                                            item.setAmount(Integer.parseInt(data.orderProducts[i][2].toString()));
+                                            item.setPrice(item.getAmount() * Integer.parseInt(data.product[j][3].toString()));
+                                            item.setCategory(data.productsCategory[k][1].toString());
+                                            order.add(item);
+                                            model.addRow(new Object[]{"Товар", data.product[j][1].toString(), data.productsCategory[k][1].toString(), "Количество:" + data.orderProducts[i][2].toString(), Integer.parseInt(data.orderProducts[i][2].toString()) * Integer.parseInt(data.product[j][3].toString())});
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                    for (int i = 0; i < data.getOrderServices().length; ++i) {
-                        if (Integer.parseInt(data.getOrderServices()[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                            for (int j = 0; j < data.getService().length; ++j) {
-                                if (Integer.parseInt(data.getService()[j][0].toString()) == Integer.parseInt(data.getOrderServices()[i][1].toString())) {
-                                    model.addRow(new Object[]{"Услуга", data.getService()[j][1].toString(), data.getService()[j][2].toString()});
+                    for (int i = 0; i < data.orderServices.length; ++i) {
+                        if (Integer.parseInt(data.orderServices[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                            for (int j = 0; j < data.service.length; ++j) {
+                                if (Integer.parseInt(data.service[j][0].toString()) == Integer.parseInt(data.orderServices[i][1].toString())) {
+                                    OrderServicesAdd item = new OrderServicesAdd();
+                                    item.setId(Integer.parseInt(data.service[j][0].toString()));
+                                    item.setName(data.service[j][1].toString());
+                                    item.setPrice(Integer.parseInt(data.service[j][2].toString()));
+                                    order.add(item);
+                                    model.addRow(new Object[]{"Услуга", data.service[j][1].toString(), "", "", data.service[j][2].toString()});
                                 }
                             }
                         }
                     }
-                    for (int i = 0; i < data.getOrderTransport().length; ++i) {
-                        if (Integer.parseInt(data.getOrderTransport()[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                            for (int j = 0; j < data.getTransport().length; ++j) {
-                                if (Integer.parseInt(data.getTransport()[j][0].toString()) == Integer.parseInt(data.getOrderTransport()[i][1].toString())) {
-                                    model.addRow(new Object[]{"Транспорт", data.getTransport()[j][1].toString(), data.getTransport()[j][2].toString()});
+                    for (int i = 0; i < data.orderTransport.length; ++i) {
+                        if (Integer.parseInt(data.orderTransport[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                            for (int j = 0; j < data.transport.length; ++j) {
+                                if (Integer.parseInt(data.transport[j][0].toString()) == Integer.parseInt(data.orderTransport[i][1].toString())) {
+                                    OrderTransportAdd item = new OrderTransportAdd();
+                                    item.setId(Integer.parseInt(data.transport[j][0].toString()));
+                                    item.setModel(data.transport[j][1].toString());
+                                    item.setCapacity(Integer.parseInt(data.transport[j][2].toString()));
+                                    order.add(item);
+                                    model.addRow(new Object[]{"Транспорт", data.transport[j][1].toString(), "Мест: " + data.transport[j][2].toString()});
                                 }
                             }
                         }
                     }
+                    orderSize = order.size();
                 }
             }
         });
@@ -255,11 +461,11 @@ public class OrderCheck extends JFrame {
                 } catch (SQLException c) {
                     c.printStackTrace();
                 }
-                for (int i = 0; i < data.getCorpse().length; ++i) {
-                    if (Integer.parseInt(data.getCorpse()[i][5].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                for (int i = 0; i < data.corpse.length; ++i) {
+                    if (Integer.parseInt(data.corpse[i][5].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
                         try {
                             Connection con = ds.getConnection();
-                            CallableStatement cstmt = con.prepareCall("UPDATE Corpse SET stage = 'Захоронено' WHERE id = " + Integer.parseInt(data.getCorpse()[i][0].toString()) + ";");
+                            CallableStatement cstmt = con.prepareCall("UPDATE Corpse SET stage = 'Захоронено' WHERE id = " + Integer.parseInt(data.corpse[i][0].toString()) + ";");
                             cstmt.execute();
                         } catch (SQLException c) {
                             c.printStackTrace();
@@ -268,6 +474,283 @@ public class OrderCheck extends JFrame {
                 }
                 Exit();
                 control.setUpdate(true);
+            }
+        });
+        button3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (comboBox1.getSelectedIndex() != 0 && comboBox1.getSelectedIndex() != -1) {
+                    comboBox1.setSelectedIndex(comboBox1.getSelectedIndex() - 1);
+                }
+
+            }
+        });
+        button4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (comboBox1.getSelectedIndex() < comboBox1.getItemCount() - 1 && comboBox1.getSelectedIndex() != -1) {
+                    comboBox1.setSelectedIndex(comboBox1.getSelectedIndex() + 1);
+                }
+            }
+        });
+        editButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame temp;
+                Thread tempThread;
+                if (radioButton1.isSelected()) {
+                    OrderCorpseAdd tempItem = new OrderCorpseAdd();
+                    temp = new CorpseOrderAdd("Добавить покойника", data, control, tempItem, model, order);
+                    temp.setIconImage(Main.getFDImage());
+                    temp.setSize(600, 400);
+                    temp.setVisible(true);
+                    tempThread = new Thread(() -> {
+                        while (temp.isDisplayable()) {
+                            try {
+                                sleep(500);
+                            } catch (InterruptedException c) {
+                                throw new RuntimeException(c);
+                            }
+                        }
+                        if (orderSize != order.size()) {
+                            order.get(order.size() - 1).updateDb(Integer.parseInt(textField1.getText()));
+                            int price = 0;
+                            for (int i = 0; i < order.size(); ++i) {
+                                price += order.get(i).getPrice();
+                            }
+                            textField5.setText(String.valueOf(price));
+                            SQLServerDataSource ds = new SQLServerDataSource();
+                            ds.setUser("admin");
+                            ds.setPassword("admin");
+                            ds.setServerName("localhost");
+                            ds.setPortNumber(Integer.parseInt("1433"));
+                            ds.setDatabaseName("Bureau");
+                            ds.setTrustServerCertificate(true);
+
+                            try {
+                                Connection con = ds.getConnection();
+                                CallableStatement cstmt = con.prepareCall("UPDATE Ordering SET price = " + price + " WHERE id = " + textField1.getText() + ";");
+                                cstmt.execute();
+                            } catch (SQLException g) {
+                                g.printStackTrace();
+                            }
+                            control.setUpdate(true);
+                        }
+                    });
+                    tempThread.start();
+                } else if (radioButton2.isSelected()) {
+                    OrderGraveyardAdd tempItem = new OrderGraveyardAdd();
+                    temp = new OrderGraveyardAddForm("Добавить место на кладбище", data, control, tempItem, model, order);
+                    temp.setIconImage(Main.getFDImage());
+                    temp.setSize(600, 400);
+                    temp.setVisible(true);
+                    tempThread = new Thread(() -> {
+                        while (temp.isDisplayable()) {
+                            try {
+                                sleep(500);
+                            } catch (InterruptedException c) {
+                                throw new RuntimeException(c);
+                            }
+                        }
+                        if (orderSize != order.size()) {
+                            order.get(order.size() - 1).updateDb(Integer.parseInt(textField1.getText()));
+                            int price = 0;
+                            for (int i = 0; i < order.size(); ++i) {
+                                price += order.get(i).getPrice();
+                            }
+                            textField5.setText(String.valueOf(price));
+                            SQLServerDataSource ds = new SQLServerDataSource();
+                            ds.setUser("admin");
+                            ds.setPassword("admin");
+                            ds.setServerName("localhost");
+                            ds.setPortNumber(Integer.parseInt("1433"));
+                            ds.setDatabaseName("Bureau");
+                            ds.setTrustServerCertificate(true);
+
+                            try {
+                                Connection con = ds.getConnection();
+                                CallableStatement cstmt = con.prepareCall("UPDATE Ordering SET price = " + price + " WHERE id = " + textField1.getText() + ";");
+                                cstmt.execute();
+                            } catch (SQLException g) {
+                                g.printStackTrace();
+                            }
+                            control.setUpdate(true);
+                        }
+                    });
+                    tempThread.start();
+                } else if (radioButton3.isSelected()) {
+                    OrderPlaceAdd tempItem = new OrderPlaceAdd();
+                    temp = new OrderPlaceAddForm("Добавить место проведения", data, control, tempItem, model, order);
+                    temp.setIconImage(Main.getFDImage());
+                    temp.setSize(600, 400);
+                    temp.setVisible(true);
+                    tempThread = new Thread(() -> {
+                        while (temp.isDisplayable()) {
+                            try {
+                                sleep(500);
+                            } catch (InterruptedException c) {
+                                throw new RuntimeException(c);
+                            }
+                        }
+                        if (orderSize != order.size()) {
+                            order.get(order.size() - 1).updateDb(Integer.parseInt(textField1.getText()));
+                            int price = 0;
+                            for (int i = 0; i < order.size(); ++i) {
+                                price += order.get(i).getPrice();
+                            }
+                            textField5.setText(String.valueOf(price));
+                            SQLServerDataSource ds = new SQLServerDataSource();
+                            ds.setUser("admin");
+                            ds.setPassword("admin");
+                            ds.setServerName("localhost");
+                            ds.setPortNumber(Integer.parseInt("1433"));
+                            ds.setDatabaseName("Bureau");
+                            ds.setTrustServerCertificate(true);
+
+                            try {
+                                Connection con = ds.getConnection();
+                                CallableStatement cstmt = con.prepareCall("UPDATE Ordering SET price = " + price + " WHERE id = " + textField1.getText() + ";");
+                                cstmt.execute();
+                            } catch (SQLException g) {
+                                g.printStackTrace();
+                            }
+                            control.setUpdate(true);
+                        }
+                    });
+                    tempThread.start();
+                } else if (radioButton4.isSelected()) {
+                    OrderProductsAdd tempItem = new OrderProductsAdd();
+                    temp = new OrderProductsAddForm("Добавить товар", data, control, tempItem, model, order);
+                    temp.setIconImage(Main.getFDImage());
+                    temp.setSize(600, 400);
+                    temp.setVisible(true);
+                    tempThread = new Thread(() -> {
+                        while (temp.isDisplayable()) {
+                            try {
+                                sleep(500);
+                            } catch (InterruptedException c) {
+                                throw new RuntimeException(c);
+                            }
+                        }
+                        if (orderSize != order.size()) {
+                            order.get(order.size() - 1).updateDb(Integer.parseInt(textField1.getText()));
+                            int price = 0;
+                            for (int i = 0; i < order.size(); ++i) {
+                                price += order.get(i).getPrice();
+                            }
+                            textField5.setText(String.valueOf(price));
+                            SQLServerDataSource ds = new SQLServerDataSource();
+                            ds.setUser("admin");
+                            ds.setPassword("admin");
+                            ds.setServerName("localhost");
+                            ds.setPortNumber(Integer.parseInt("1433"));
+                            ds.setDatabaseName("Bureau");
+                            ds.setTrustServerCertificate(true);
+
+                            try {
+                                Connection con = ds.getConnection();
+                                CallableStatement cstmt = con.prepareCall("UPDATE Ordering SET price = " + price + " WHERE id = " + textField1.getText() + ";");
+                                cstmt.execute();
+                            } catch (SQLException g) {
+                                g.printStackTrace();
+                            }
+                            control.setUpdate(true);
+                        }
+                    });
+                    tempThread.start();
+                } else if (radioButton5.isSelected()) {
+                    OrderServicesAdd tempItem = new OrderServicesAdd();
+                    temp = new OrderServicesAddForm("Добавить услугу", data, control, tempItem, model, order);
+                    temp.setIconImage(Main.getFDImage());
+                    temp.setSize(600, 400);
+                    temp.setVisible(true);
+                    tempThread = new Thread(() -> {
+                        while (temp.isDisplayable()) {
+                            try {
+                                sleep(500);
+                            } catch (InterruptedException c) {
+                                throw new RuntimeException(c);
+                            }
+                        }
+                        if (orderSize != order.size()) {
+                            order.get(order.size() - 1).updateDb(Integer.parseInt(textField1.getText()));
+                            int price = 0;
+                            for (int i = 0; i < order.size(); ++i) {
+                                price += order.get(i).getPrice();
+                            }
+                            textField5.setText(String.valueOf(price));
+                            SQLServerDataSource ds = new SQLServerDataSource();
+                            ds.setUser("admin");
+                            ds.setPassword("admin");
+                            ds.setServerName("localhost");
+                            ds.setPortNumber(Integer.parseInt("1433"));
+                            ds.setDatabaseName("Bureau");
+                            ds.setTrustServerCertificate(true);
+
+                            try {
+                                Connection con = ds.getConnection();
+                                CallableStatement cstmt = con.prepareCall("UPDATE Ordering SET price = " + price + " WHERE id = " + textField1.getText() + ";");
+                                cstmt.execute();
+                            } catch (SQLException g) {
+                                g.printStackTrace();
+                            }
+                            control.setUpdate(true);
+                        }
+                    });
+                    tempThread.start();
+                } else if (radioButton6.isSelected()) {
+                    OrderTransportAdd tempItem = new OrderTransportAdd();
+                    temp = new OrderTransportAddForm("Добавить транспорт", data, control, tempItem, model, order);
+                    temp.setIconImage(Main.getFDImage());
+                    temp.setSize(600, 400);
+                    temp.setVisible(true);
+                    tempThread = new Thread(() -> {
+                        while (temp.isDisplayable()) {
+                            try {
+                                sleep(500);
+                            } catch (InterruptedException c) {
+                                throw new RuntimeException(c);
+                            }
+                        }
+                        if (orderSize != order.size()) {
+                            order.get(order.size() - 1).updateDb(Integer.parseInt(textField1.getText()));
+                            int price = 0;
+                            for (int i = 0; i < order.size(); ++i) {
+                                price += order.get(i).getPrice();
+                            }
+                            textField5.setText(String.valueOf(price));
+                            SQLServerDataSource ds = new SQLServerDataSource();
+                            ds.setUser("admin");
+                            ds.setPassword("admin");
+                            ds.setServerName("localhost");
+                            ds.setPortNumber(Integer.parseInt("1433"));
+                            ds.setDatabaseName("Bureau");
+                            ds.setTrustServerCertificate(true);
+
+                            try {
+                                Connection con = ds.getConnection();
+                                CallableStatement cstmt = con.prepareCall("UPDATE Ordering SET price = " + price + " WHERE id = " + textField1.getText() + ";");
+                                cstmt.execute();
+                            } catch (SQLException g) {
+                                g.printStackTrace();
+                            }
+                            control.setUpdate(true);
+                        }
+                    });
+                    tempThread.start();
+                }
+            }
+        });
+        button5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateOrder();
+            }
+        });
+        delButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
             }
         });
     }

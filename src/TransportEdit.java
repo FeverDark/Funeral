@@ -15,9 +15,9 @@ public class TransportEdit extends JFrame {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setContentPane(mainPanel);
         this.pack();
-        textField1.setText(Objects.toString(data.getTransport()[src][0], ""));
-        textField2.setText(Objects.toString(data.getTransport()[src][1], ""));
-        textField3.setText(Objects.toString(data.getTransport()[src][2], ""));
+        textField1.setText(Objects.toString(data.transport[src][0], ""));
+        textField2.setText(Objects.toString(data.transport[src][1], ""));
+        textField3.setText(Objects.toString(data.transport[src][2], ""));
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -26,21 +26,21 @@ public class TransportEdit extends JFrame {
                     Exit();
                     return;
                 }
-                if (textField1.getText().equals(Objects.toString(data.getTransport()[src][0], "")) &&
-                        textField2.getText().equals(Objects.toString(data.getTransport()[src][1], "")) &&
-                        textField3.getText().equals(Objects.toString(data.getTransport()[src][2], ""))) {
+                if (textField1.getText().equals(Objects.toString(data.transport[src][0], "")) &&
+                        textField2.getText().equals(Objects.toString(data.transport[src][1], "")) &&
+                        textField3.getText().equals(Objects.toString(data.transport[src][2], ""))) {
                     Exit();
                 } else {
                     if (textField1.getText().isEmpty() || textField2.getText().isEmpty()) {
                         JOptionPane.showMessageDialog(new JFrame(), "Основные поля должны быть заполненными.");
-                        textField1.setText(Objects.toString(data.getTransport()[src][0], ""));
-                        textField2.setText(Objects.toString(data.getTransport()[src][1], ""));
+                        textField1.setText(Objects.toString(data.transport[src][0], ""));
+                        textField2.setText(Objects.toString(data.transport[src][1], ""));
                         return;
                     }
-                    for (int i = 0; i < data.getTransport().length; ++i) {
-                        if (!textField1.getText().equals(data.getTransport()[src][0].toString())) {
+                    for (int i = 0; i < data.transport.length; ++i) {
+                        if (!textField1.getText().equals(data.transport[src][0].toString())) {
                             JOptionPane.showMessageDialog(new JFrame(), "ID изменять нельзя.");
-                            textField1.setText(Objects.toString(data.getTransport()[src][0], ""));
+                            textField1.setText(Objects.toString(data.transport[src][0], ""));
                             return;
                         }
                     }
@@ -48,14 +48,14 @@ public class TransportEdit extends JFrame {
                         Integer.parseInt(textField1.getText());
                     } catch (NumberFormatException c) {
                         JOptionPane.showMessageDialog(new JFrame(), "Неправильно введен ID.");
-                        textField1.setText(Objects.toString(data.getTransport()[src][0], ""));
+                        textField1.setText(Objects.toString(data.transport[src][0], ""));
                         return;
                     }
                     try {
                         if (!textField3.getText().equals("")) Integer.parseInt(textField3.getText());
                     } catch (NumberFormatException c) {
                         JOptionPane.showMessageDialog(new JFrame(), "Неправильно введено количество мест.");
-                        textField3.setText(Objects.toString(data.getTransport()[src][2], ""));
+                        textField3.setText(Objects.toString(data.transport[src][2], ""));
                         return;
                     }
                     data.updateTransport(textField1.getText(), textField2.getText(), textField3.getText());

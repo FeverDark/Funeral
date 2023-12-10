@@ -17,8 +17,8 @@ public class Graveyard extends JFrame {
         this.setContentPane(mainPanel);
         this.pack();
         comboBox1.addItem(new ComboItem("", "NULL"));
-        for (int i = 0; i < data.getOrdering().length; ++i) {
-            comboBox1.addItem(new ComboItem(data.getOrdering()[i][0].toString(), data.getOrdering()[i][0].toString()));
+        for (int i = 0; i < data.ordering.length; ++i) {
+            comboBox1.addItem(new ComboItem(data.ordering[i][0].toString(), data.ordering[i][0].toString()));
         }
         addButton.addActionListener(new ActionListener() {
             @Override

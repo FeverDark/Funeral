@@ -3,9 +3,9 @@
     <output-path>$PROJECT_DIR$/out/artifacts/Funeral_jar</output-path>
     <root id="archive" name="Funeral.jar">
       <element id="module-output" name="Funeral" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/mssql-jdbc-12.4.2.jre11.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/commons-lang3-3.13.0.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/LGoodDatePicker-11.2.1.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/mssql-jdbc-12.4.2.jre11.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

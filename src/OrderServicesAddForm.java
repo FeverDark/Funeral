@@ -16,13 +16,13 @@ public class OrderServicesAddForm extends JFrame {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setContentPane(mainPanel);
         this.pack();
-        for (int i = 0; i < data.getService().length; ++i) {
-            comboBox2.addItem(new ComboItem(data.getService()[i][1].toString(), data.getService()[i][0].toString()));
+        for (int i = 0; i < data.service.length; ++i) {
+            comboBox2.addItem(new ComboItem(data.service[i][1].toString(), data.service[i][0].toString()));
         }
         if (comboBox2.getSelectedIndex() != -1) {
-            for (int i = 0; i < data.getService().length; ++i) {
-                if (Integer.parseInt(data.getService()[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
-                    price = Integer.parseInt(data.getService()[i][2].toString());
+            for (int i = 0; i < data.service.length; ++i) {
+                if (Integer.parseInt(data.service[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
+                    price = Integer.parseInt(data.service[i][2].toString());
                     label11.setText("Цена: " + price);
                     break;
                 }
@@ -43,13 +43,13 @@ public class OrderServicesAddForm extends JFrame {
                 item.setId(Integer.parseInt(((ComboItem) comboBox2.getSelectedItem()).getValue()));
                 item.setName(((ComboItem) comboBox2.getSelectedItem()).getKey());
                 item.setPrice(price);
-                /*for(int i = 0; i < data.getService().length; ++i){
-                    if(Integer.parseInt(data.getService()[i][0].toString()) == item.getId()) {
-                        item.setPrice(Integer.parseInt(data.getService()[i][2].toString()));
+                /*for(int i = 0; i < data.service.length; ++i){
+                    if(Integer.parseInt(data.service[i][0].toString()) == item.getId()) {
+                        item.setPrice(Integer.parseInt(data.service[i][2].toString()));
                         break;
                     }
                 }*/
-                model.addRow(new Object[]{"Услуга", "", "", item.getName(), item.getPrice()});
+                model.addRow(new Object[]{"Услуга", item.getName(), "", "",  item.getPrice()});
                 order.add(item);
                 Exit();
             }
@@ -58,9 +58,9 @@ public class OrderServicesAddForm extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (comboBox2.getSelectedIndex() != -1) {
-                    for (int i = 0; i < data.getService().length; ++i) {
-                        if (Integer.parseInt(data.getService()[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
-                            price = Integer.parseInt(data.getService()[i][2].toString());
+                    for (int i = 0; i < data.service.length; ++i) {
+                        if (Integer.parseInt(data.service[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox2.getSelectedItem()).getValue())) {
+                            price = Integer.parseInt(data.service[i][2].toString());
                             label11.setText("Цена: " + price);
                             break;
                         }

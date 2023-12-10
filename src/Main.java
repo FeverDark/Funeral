@@ -73,7 +73,11 @@ public class Main {
                             mainData.getData();
                         }
                     }).start();
-                    Thread.sleep(100);
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                     switch (tempState) {
                         case 1:
                             control.selectData(mainFrame, mainData, mainData.client, mainData.clientNames, "Клиенты", 1);

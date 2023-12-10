@@ -31,8 +31,8 @@ public class Employer extends JFrame {
                     JOptionPane.showMessageDialog(new JFrame(), "Основные поля должны быть заполненными.");
                     return;
                 }
-                for (int i = 0; i < data.getEmployer().length; ++i) {
-                    if (textField6.getText().equals(Objects.toString(data.getEmployer()[i][5], ""))) {
+                for (int i = 0; i < data.employer.length; ++i) {
+                    if (textField6.getText().equals(Objects.toString(data.employer[i][5], ""))) {
                         JOptionPane.showMessageDialog(new JFrame(), "Логин должен быть уникальным.");
                         return;
                     }

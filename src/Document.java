@@ -15,16 +15,16 @@ public class Document extends JFrame {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setContentPane(mainPanel);
         this.pack();
-        for (int i = 0; i < data.getEmployer().length; ++i) {
-            comboBox1.addItem(new ComboItem(data.getEmployer()[i][1].toString(), data.getEmployer()[i][0].toString()));
+        for (int i = 0; i < data.employer.length; ++i) {
+            comboBox1.addItem(new ComboItem(data.employer[i][1].toString(), data.employer[i][0].toString()));
         }
         comboBox2.addItem(new ComboItem("", "NULL"));
-        for (int i = 0; i < data.getContractor().length; ++i) {
-            comboBox2.addItem(new ComboItem(data.getContractor()[i][0].toString(), data.getContractor()[i][0].toString()));
+        for (int i = 0; i < data.contractor.length; ++i) {
+            comboBox2.addItem(new ComboItem(data.contractor[i][0].toString(), data.contractor[i][0].toString()));
         }
         comboBox3.addItem(new ComboItem("", "NULL"));
-        for (int i = 0; i < data.getOrdering().length; ++i) {
-            comboBox3.addItem(new ComboItem(data.getOrdering()[i][0].toString(), data.getOrdering()[i][0].toString()));
+        for (int i = 0; i < data.ordering.length; ++i) {
+            comboBox3.addItem(new ComboItem(data.ordering[i][0].toString(), data.ordering[i][0].toString()));
         }
         addButton.addActionListener(new ActionListener() {
             @Override

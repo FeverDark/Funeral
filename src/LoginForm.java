@@ -10,6 +10,8 @@ public class LoginForm extends JFrame {
     private JLabel loginLabel;
     private JLabel passwordLabel;
     private JLabel labelText;
+    private JLabel errorLabel;
+    private int counter = 0;
 
     public LoginForm(String title, DB data, Controller control) {
         super(title);
@@ -20,11 +22,18 @@ public class LoginForm extends JFrame {
         enterButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                boolean[] log = data.login(loginField.getText(), passwordField.getText());
-                if (log[0]) {
-                    data.isLogged = log[0];
-                    data.superUser = log[1];
-                    control.setState(1);
+                if (counter < 3) {
+                    counter++;
+                    boolean[] log = data.login(loginField.getText(), passwordField.getText());
+                    if (log[0]) {
+                        data.isLogged = log[0];
+                        data.superUser = log[1];
+                        control.setState(1);
+                    } else {
+                        errorLabel.setText("Неправильно задан логин или пароль. Осталось " + (3 - counter) + " попыток на вход");
+                    }
+                } else {
+                    errorLabel.setText("Вы исчерпали свои попытки на вход");
                 }
             }
         });
