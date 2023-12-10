@@ -750,7 +750,10 @@ public class OrderCheck extends JFrame {
         delButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                if (tempTable.getSelectedRow() != -1) {
+                    order.get(tempTable.getSelectedRow()).deleteDb(Integer.parseInt(textField1.getText()));
+                    control.setUpdate(true);
+                }
             }
         });
     }

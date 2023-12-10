@@ -15,6 +15,8 @@ public class Item {
 
     public void updateDb(int id) {
     }
+    public void deleteDb(int id) {
+    }
 
     public int getPrice() {
         return 0;

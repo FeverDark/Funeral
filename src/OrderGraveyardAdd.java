@@ -68,7 +68,25 @@ public class OrderGraveyardAdd extends Item {
 
         try {
             Connection con = ds.getConnection();
-            CallableStatement cstmt = con.prepareCall("UPDATE Graveyard SET  order_id = " + id + " WHERE id = " + this.id + ";");
+            CallableStatement cstmt = con.prepareCall("UPDATE Graveyard SET order_id = " + id + " WHERE id = " + this.id + ";");
+            cstmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    @Override
+    public void deleteDb(int id) {
+        SQLServerDataSource ds = new SQLServerDataSource();
+        ds.setUser("admin");
+        ds.setPassword("admin");
+        ds.setServerName("localhost");
+        ds.setPortNumber(Integer.parseInt("1433"));
+        ds.setDatabaseName("Bureau");
+        ds.setTrustServerCertificate(true);
+
+        try {
+            Connection con = ds.getConnection();
+            CallableStatement cstmt = con.prepareCall("UPDATE Graveyard SET order_id = NULL WHERE id = " + this.id + ";");
             cstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();

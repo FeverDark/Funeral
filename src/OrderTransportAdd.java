@@ -55,4 +55,22 @@ public class OrderTransportAdd extends Item {
             e.printStackTrace();
         }
     }
+    @Override
+    public void deleteDb(int id) {
+        SQLServerDataSource ds = new SQLServerDataSource();
+        ds.setUser("admin");
+        ds.setPassword("admin");
+        ds.setServerName("localhost");
+        ds.setPortNumber(Integer.parseInt("1433"));
+        ds.setDatabaseName("Bureau");
+        ds.setTrustServerCertificate(true);
+
+        try {
+            Connection con = ds.getConnection();
+            CallableStatement cstmt = con.prepareCall("DELETE FROM OrderTransport WHERE order_id = " + id + " AND transport_id = " + this.id +";");
+            cstmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
