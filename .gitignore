@@ -27,3 +27,6 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/.idea/
+/commons-lang3-3.13.0.jar
+/mssql-jdbc-12.4.2.jre11.jar
