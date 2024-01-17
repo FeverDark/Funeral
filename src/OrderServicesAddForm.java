@@ -49,7 +49,7 @@ public class OrderServicesAddForm extends JFrame {
                         break;
                     }
                 }*/
-                model.addRow(new Object[]{"Услуга", item.getName(), "", "",  item.getPrice()});
+                model.addRow(new Object[]{"Услуга", item.getName(), "", "", item.getPrice()});
                 order.add(item);
                 Exit();
             }

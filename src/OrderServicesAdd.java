@@ -56,6 +56,7 @@ public class OrderServicesAdd extends Item {
             e.printStackTrace();
         }
     }
+
     @Override
     public void deleteDb(int id) {
         SQLServerDataSource ds = new SQLServerDataSource();
@@ -68,7 +69,7 @@ public class OrderServicesAdd extends Item {
 
         try {
             Connection con = ds.getConnection();
-            CallableStatement cstmt = con.prepareCall("DELETE FROM OrderServices WHERE order_id = " + id + " AND service_id = " + this.id +";");
+            CallableStatement cstmt = con.prepareCall("DELETE FROM OrderServices WHERE order_id = " + id + " AND service_id = " + this.id + ";");
             cstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();

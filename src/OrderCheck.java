@@ -39,127 +39,10 @@ public class OrderCheck extends JFrame {
     private JRadioButton radioButton6;
     private JButton delButton;
     private String comm = null;
-    public OrderCheck getOrder() {
-        return this;
-    }
-    private DB data;
-    private DefaultTableModel model;
+    private final DB data;
+    private final DefaultTableModel model;
     private ArrayList<Item> order;
     private int orderSize = 0;
-    public void updateOrder() {
-        if (comboBox1.getSelectedIndex() != -1) {
-            model.setRowCount(0);
-            order = new ArrayList<Item>();
-            for (int i = 0; i < data.ordering.length; ++i) {
-                if (Integer.parseInt(data.ordering[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                    textField1.setText(Objects.toString(data.ordering[i][0], ""));
-                    for (int j = 0; j < data.client.length; ++j) {
-                        if (Integer.parseInt(data.client[j][0].toString()) == Integer.parseInt(data.ordering[i][1].toString())) {
-                            textField2.setText(Objects.toString(data.client[j][1], ""));
-                            textField6.setText(Objects.toString(data.client[j][2], ""));
-                        }
-                    }
-                    for (int j = 0; j < data.employer.length; ++j) {
-                        if (Integer.parseInt(data.employer[j][0].toString()) == Integer.parseInt(data.ordering[i][2].toString())) {
-                            textField3.setText(Objects.toString(data.employer[j][1], ""));
-                        }
-                    }
-                    textField4.setText(Objects.toString(data.ordering[i][3], ""));
-                    textField5.setText(Objects.toString(data.ordering[i][4], ""));
-                    comm = Objects.toString(data.ordering[i][5], "");
-                    textField7.setText(comm);
-                    break;
-                }
-            }
-            for (int i = 0; i < data.corpse.length; ++i) {
-                if (Integer.parseInt(data.corpse[i][5].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                    OrderCorpseAdd item = new OrderCorpseAdd();;
-                    item.setName(data.corpse[i][1].toString());
-                    item.setBdate(data.corpse[i][2].toString());
-                    item.setDdate(data.corpse[i][3].toString());
-                    order.add(item);
-                    model.addRow(new Object[]{"Покойник", data.corpse[i][1].toString(), data.corpse[i][2].toString(), data.corpse[i][3].toString(), Objects.toString(data.corpse[i][4], "")});
-                }
-            }
-            for (int i = 0; i < data.graveyard.length; ++i) {
-                if (Integer.parseInt(data.graveyard[i][5].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                    OrderGraveyardAdd item = new OrderGraveyardAdd();
-                    item.setId(Integer.parseInt(data.graveyard[i][0].toString()));
-                    item.setName(data.graveyard[i][1].toString());
-                    item.setNumber(Integer.parseInt(data.graveyard[i][2].toString()));
-                    item.setArea(Float.parseFloat(data.graveyard[i][4].toString()));
-                    item.setPrice(Integer.parseInt(data.graveyard[i][3].toString()));
-                    order.add(item);
-                    model.addRow(new Object[]{"Место на кладбище", data.graveyard[i][1].toString(), "Место: " + data.graveyard[i][2].toString(), "Площадь: " + data.graveyard[i][4].toString(), data.graveyard[i][3].toString()});
-                }
-            }
-            for (int i = 0; i < data.orderPlace.length; ++i) {
-                if (Integer.parseInt(data.orderPlace[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                    for (int j = 0; j < data.place.length; ++j) {
-                        if (Integer.parseInt(data.place[j][0].toString()) == Integer.parseInt(data.orderPlace[i][1].toString())) {
-                            OrderPlaceAdd item = new OrderPlaceAdd();
-                            item.setId(Integer.parseInt(data.place[j][0].toString()));
-                            item.setName(data.place[j][1].toString());
-                            item.setAdress(data.place[j][2].toString());
-                            order.add(item);
-                            model.addRow(new Object[]{"Место церемонии", data.place[j][1].toString(), data.place[j][2].toString() == null ? "" : data.place[j][2].toString()});
-                        }
-                    }
-                }
-            }
-            for (int i = 0; i < data.orderProducts.length; ++i) {
-                if (Integer.parseInt(data.orderProducts[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                    for (int j = 0; j < data.place.length; ++j) {
-                        if (Integer.parseInt(data.product[j][0].toString()) == Integer.parseInt(data.orderProducts[i][1].toString())) {
-                            for (int k = 0; k < data.productsCategory.length; ++k) {
-                                if (Integer.parseInt(data.product[j][2].toString()) == Integer.parseInt(data.productsCategory[k][0].toString())) {
-                                    OrderProductsAdd item = new OrderProductsAdd();
-                                    item.setId(Integer.parseInt(data.product[j][0].toString()));
-                                    item.setName(data.product[j][1].toString());
-                                    item.setAmount(Integer.parseInt(data.orderProducts[i][2].toString()));
-                                    item.setPrice(item.getAmount() * Integer.parseInt(data.product[j][3].toString()));
-                                    item.setCategory(data.productsCategory[k][1].toString());
-                                    order.add(item);
-                                    model.addRow(new Object[]{"Товар", data.product[j][1].toString(), data.productsCategory[k][1].toString(), "Количество:" + data.orderProducts[i][2].toString(), Integer.parseInt(data.orderProducts[i][2].toString()) * Integer.parseInt(data.product[j][3].toString())});
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            for (int i = 0; i < data.orderServices.length; ++i) {
-                if (Integer.parseInt(data.orderServices[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                    for (int j = 0; j < data.service.length; ++j) {
-                        if (Integer.parseInt(data.service[j][0].toString()) == Integer.parseInt(data.orderServices[i][1].toString())) {
-                            OrderServicesAdd item = new OrderServicesAdd();
-                            item.setId(Integer.parseInt(data.service[j][0].toString()));
-                            item.setName(data.service[j][1].toString());
-                            item.setPrice(Integer.parseInt(data.service[j][2].toString()));
-                            order.add(item);
-                            model.addRow(new Object[]{"Услуга", data.service[j][1].toString(), "", "", data.service[j][2].toString()});
-                        }
-                    }
-                }
-            }
-            for (int i = 0; i < data.orderTransport.length; ++i) {
-                if (Integer.parseInt(data.orderTransport[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                    for (int j = 0; j < data.transport.length; ++j) {
-                        if (Integer.parseInt(data.transport[j][0].toString()) == Integer.parseInt(data.orderTransport[i][1].toString())) {
-                            OrderTransportAdd item = new OrderTransportAdd();
-                            item.setId(Integer.parseInt(data.transport[j][0].toString()));
-                            item.setModel(data.transport[j][1].toString());
-                            item.setCapacity(Integer.parseInt(data.transport[j][2].toString()));
-                            order.add(item);
-                            model.addRow(new Object[]{"Транспорт", data.transport[j][1].toString(), "Мест: " + data.transport[j][2].toString()});
-                        }
-                    }
-                }
-            }
-            orderSize = order.size();
-        }
-        return;
-    }
-
     public OrderCheck(String title, DB d, Controller control) {
         super(title);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -218,7 +101,7 @@ public class OrderCheck extends JFrame {
             }
             for (int i = 0; i < data.corpse.length; ++i) {
                 if (Integer.parseInt(data.corpse[i][5].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                    OrderCorpseAdd item = new OrderCorpseAdd();;
+                    OrderCorpseAdd item = new OrderCorpseAdd();
                     item.setName(data.corpse[i][1].toString());
                     item.setBdate(data.corpse[i][2].toString());
                     item.setDdate(data.corpse[i][3].toString());
@@ -357,7 +240,7 @@ public class OrderCheck extends JFrame {
                     }
                     for (int i = 0; i < data.corpse.length; ++i) {
                         if (Integer.parseInt(data.corpse[i][5].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
-                            OrderCorpseAdd item = new OrderCorpseAdd();;
+                            OrderCorpseAdd item = new OrderCorpseAdd();
                             item.setName(data.corpse[i][1].toString());
                             item.setBdate(data.corpse[i][2].toString());
                             item.setDdate(data.corpse[i][3].toString());
@@ -496,6 +379,10 @@ public class OrderCheck extends JFrame {
         editButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (textField7.getText().equals("Закрыт")) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Невозможно изменить закрытый заказ.");
+                    return;
+                }
                 JFrame temp;
                 Thread tempThread;
                 if (radioButton1.isSelected()) {
@@ -756,6 +643,123 @@ public class OrderCheck extends JFrame {
                 }
             }
         });
+    }
+
+    public OrderCheck getOrder() {
+        return this;
+    }
+
+    public void updateOrder() {
+        if (comboBox1.getSelectedIndex() != -1) {
+            model.setRowCount(0);
+            order = new ArrayList<Item>();
+            for (int i = 0; i < data.ordering.length; ++i) {
+                if (Integer.parseInt(data.ordering[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                    textField1.setText(Objects.toString(data.ordering[i][0], ""));
+                    for (int j = 0; j < data.client.length; ++j) {
+                        if (Integer.parseInt(data.client[j][0].toString()) == Integer.parseInt(data.ordering[i][1].toString())) {
+                            textField2.setText(Objects.toString(data.client[j][1], ""));
+                            textField6.setText(Objects.toString(data.client[j][2], ""));
+                        }
+                    }
+                    for (int j = 0; j < data.employer.length; ++j) {
+                        if (Integer.parseInt(data.employer[j][0].toString()) == Integer.parseInt(data.ordering[i][2].toString())) {
+                            textField3.setText(Objects.toString(data.employer[j][1], ""));
+                        }
+                    }
+                    textField4.setText(Objects.toString(data.ordering[i][3], ""));
+                    textField5.setText(Objects.toString(data.ordering[i][4], ""));
+                    comm = Objects.toString(data.ordering[i][5], "");
+                    textField7.setText(comm);
+                    break;
+                }
+            }
+            for (int i = 0; i < data.corpse.length; ++i) {
+                if (Integer.parseInt(data.corpse[i][5].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                    OrderCorpseAdd item = new OrderCorpseAdd();
+                    item.setName(data.corpse[i][1].toString());
+                    item.setBdate(data.corpse[i][2].toString());
+                    item.setDdate(data.corpse[i][3].toString());
+                    order.add(item);
+                    model.addRow(new Object[]{"Покойник", data.corpse[i][1].toString(), data.corpse[i][2].toString(), data.corpse[i][3].toString(), Objects.toString(data.corpse[i][4], "")});
+                }
+            }
+            for (int i = 0; i < data.graveyard.length; ++i) {
+                if (Integer.parseInt(data.graveyard[i][5].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                    OrderGraveyardAdd item = new OrderGraveyardAdd();
+                    item.setId(Integer.parseInt(data.graveyard[i][0].toString()));
+                    item.setName(data.graveyard[i][1].toString());
+                    item.setNumber(Integer.parseInt(data.graveyard[i][2].toString()));
+                    item.setArea(Float.parseFloat(data.graveyard[i][4].toString()));
+                    item.setPrice(Integer.parseInt(data.graveyard[i][3].toString()));
+                    order.add(item);
+                    model.addRow(new Object[]{"Место на кладбище", data.graveyard[i][1].toString(), "Место: " + data.graveyard[i][2].toString(), "Площадь: " + data.graveyard[i][4].toString(), data.graveyard[i][3].toString()});
+                }
+            }
+            for (int i = 0; i < data.orderPlace.length; ++i) {
+                if (Integer.parseInt(data.orderPlace[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                    for (int j = 0; j < data.place.length; ++j) {
+                        if (Integer.parseInt(data.place[j][0].toString()) == Integer.parseInt(data.orderPlace[i][1].toString())) {
+                            OrderPlaceAdd item = new OrderPlaceAdd();
+                            item.setId(Integer.parseInt(data.place[j][0].toString()));
+                            item.setName(data.place[j][1].toString());
+                            item.setAdress(data.place[j][2].toString());
+                            order.add(item);
+                            model.addRow(new Object[]{"Место церемонии", data.place[j][1].toString(), data.place[j][2].toString() == null ? "" : data.place[j][2].toString()});
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < data.orderProducts.length; ++i) {
+                if (Integer.parseInt(data.orderProducts[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                    for (int j = 0; j < data.place.length; ++j) {
+                        if (Integer.parseInt(data.product[j][0].toString()) == Integer.parseInt(data.orderProducts[i][1].toString())) {
+                            for (int k = 0; k < data.productsCategory.length; ++k) {
+                                if (Integer.parseInt(data.product[j][2].toString()) == Integer.parseInt(data.productsCategory[k][0].toString())) {
+                                    OrderProductsAdd item = new OrderProductsAdd();
+                                    item.setId(Integer.parseInt(data.product[j][0].toString()));
+                                    item.setName(data.product[j][1].toString());
+                                    item.setAmount(Integer.parseInt(data.orderProducts[i][2].toString()));
+                                    item.setPrice(item.getAmount() * Integer.parseInt(data.product[j][3].toString()));
+                                    item.setCategory(data.productsCategory[k][1].toString());
+                                    order.add(item);
+                                    model.addRow(new Object[]{"Товар", data.product[j][1].toString(), data.productsCategory[k][1].toString(), "Количество:" + data.orderProducts[i][2].toString(), Integer.parseInt(data.orderProducts[i][2].toString()) * Integer.parseInt(data.product[j][3].toString())});
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < data.orderServices.length; ++i) {
+                if (Integer.parseInt(data.orderServices[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                    for (int j = 0; j < data.service.length; ++j) {
+                        if (Integer.parseInt(data.service[j][0].toString()) == Integer.parseInt(data.orderServices[i][1].toString())) {
+                            OrderServicesAdd item = new OrderServicesAdd();
+                            item.setId(Integer.parseInt(data.service[j][0].toString()));
+                            item.setName(data.service[j][1].toString());
+                            item.setPrice(Integer.parseInt(data.service[j][2].toString()));
+                            order.add(item);
+                            model.addRow(new Object[]{"Услуга", data.service[j][1].toString(), "", "", data.service[j][2].toString()});
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < data.orderTransport.length; ++i) {
+                if (Integer.parseInt(data.orderTransport[i][0].toString()) == Integer.parseInt(((ComboItem) comboBox1.getSelectedItem()).getValue())) {
+                    for (int j = 0; j < data.transport.length; ++j) {
+                        if (Integer.parseInt(data.transport[j][0].toString()) == Integer.parseInt(data.orderTransport[i][1].toString())) {
+                            OrderTransportAdd item = new OrderTransportAdd();
+                            item.setId(Integer.parseInt(data.transport[j][0].toString()));
+                            item.setModel(data.transport[j][1].toString());
+                            item.setCapacity(Integer.parseInt(data.transport[j][2].toString()));
+                            order.add(item);
+                            model.addRow(new Object[]{"Транспорт", data.transport[j][1].toString(), "Мест: " + data.transport[j][2].toString()});
+                        }
+                    }
+                }
+            }
+            orderSize = order.size();
+        }
     }
 
     private void Exit() {

@@ -55,6 +55,7 @@ public class OrderTransportAdd extends Item {
             e.printStackTrace();
         }
     }
+
     @Override
     public void deleteDb(int id) {
         SQLServerDataSource ds = new SQLServerDataSource();
@@ -67,7 +68,7 @@ public class OrderTransportAdd extends Item {
 
         try {
             Connection con = ds.getConnection();
-            CallableStatement cstmt = con.prepareCall("DELETE FROM OrderTransport WHERE order_id = " + id + " AND transport_id = " + this.id +";");
+            CallableStatement cstmt = con.prepareCall("DELETE FROM OrderTransport WHERE order_id = " + id + " AND transport_id = " + this.id + ";");
             cstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();

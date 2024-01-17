@@ -562,9 +562,9 @@ public class DB {
             ds.setTrustServerCertificate(true);
 
             try (Connection con = ds.getConnection()) {
-                 //CallableStatement cstmt = con.prepareCall("DELETE FROM Ordering WHERE id = " + ordering[i][0])) {
+                //CallableStatement cstmt = con.prepareCall("DELETE FROM Ordering WHERE id = " + ordering[i][0])) {
                 CallableStatement cstmt;
-                if(ordering[i][4].toString().equals("0")){
+                if (ordering[i][4].toString().equals("0")) {
                     cstmt = con.prepareCall("DELETE FROM Ordering WHERE id = " + ordering[i][0]);
                 } else {
                     cstmt = con.prepareCall("UPDATE Ordering SET comm = 'Закрыт' WHERE id = " + ordering[i][0]);
